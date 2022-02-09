@@ -10,8 +10,6 @@ const App = ()=> {
      <Router>
 
      </Router>
-     <div
-     >fdgfdgfdgdfgdg</div>
     </div>
   );
 }
