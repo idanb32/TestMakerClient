@@ -1,0 +1,26 @@
+.Line{
+    display: flex;
+    border: 0.5mm solid grey;
+    flex-wrap: wrap;
+    align-items: stretch ;
+    justify-content: center;
+    width: 100%;
+}
+.gray{
+    background-color: var(--background-grey);
+}
+.orange{
+    background-color: var(--background-orange);
+}
+.white{
+    background-color: var(--background-white);
+}
+.green{
+    background-color: var(--background-green);    
+}
+.PartLine{
+    border: 0.5mm solid grey;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
