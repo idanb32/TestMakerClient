@@ -5,7 +5,6 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 
 const TextEditor = (props) => {
-    const [editorState, setEditorState] = useState();
    
     const editor = useRef(null);
     function focusEditor() {
@@ -15,8 +14,8 @@ const TextEditor = (props) => {
         onClick={focusEditor} >
         <Editor
             editorClassName={"Editor "+ props.classname}
-            editorState={editorState}
-            onEditorStateChange={setEditorState}
+            editorState={props.editorState}
+            onEditorStateChange={props.setEditorState}
         />
     </div>
     );

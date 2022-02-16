@@ -1,7 +1,7 @@
 import { React,useState,useEffect } from "react";
-import Button from "../GlobalComponents/Button/Button";
+import Button from "../../GlobalComponents/Button/Button";
 import { Link } from "react-router-dom";
-import BlueLayoutBar from "../GlobalComponents/BlueLayoutBar/BlueLayoutBar";
+import BlueLayoutBar from "../../GlobalComponents/BlueLayoutBar/BlueLayoutBar";
 import "./login.css";
 import LoginService from "./Services/LoginService";
 
@@ -79,7 +79,7 @@ const headers = 50;
         </Link>
 
         <div id="logInDiv" className = "btn2"  onClick={submit}>
-        <Button  color = 'grey' text = "Submit" width = '100px' height = '30px'></Button>
+        <Button  color = 'grey' text = "Submit" width = '100px' height = '30px' action={submit}></Button>
         {serverLog ? (<Link to="/MainMenu" state={{name:`${userValue}`}} > Go to main Menu</Link>):(<div></div>)}
         </div>
 

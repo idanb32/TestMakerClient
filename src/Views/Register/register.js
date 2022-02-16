@@ -1,6 +1,6 @@
 import {useState,useEffect} from 'react';
 import RegisteService from './Services/registerService';
-import BlueLayoutBar from '../GlobalComponents/BlueLayoutBar/BlueLayoutBar';
+import BlueLayoutBar from '../../GlobalComponents/BlueLayoutBar/BlueLayoutBar';
 import { Link } from 'react-router-dom';
 import './register.css'
 

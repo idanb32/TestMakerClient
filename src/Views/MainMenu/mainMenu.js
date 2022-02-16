@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import BlueLayoutBar from "../GlobalComponents/BlueLayoutBar/BlueLayoutBar";
-import DropDownMenu from "../GlobalComponents/DropDownMenu/DropDownMenu";
+import BlueLayoutBar from "../../GlobalComponents/BlueLayoutBar/BlueLayoutBar";
+import DropDownMenu from "../../GlobalComponents/DropDownMenu/DropDownMenu";
 import "./mainMenu.css"
 import { Link, useParams,useLocation } from "react-router-dom";
 import SubjectService from "./Services/subjectService";
@@ -52,14 +52,14 @@ const MainMenu = (props) => {
                 </div>
                 <div className = "btn1">
                 
-                <Link className = "btn1" to='/ManageQuestions' state = {{userName : `${userName}`,subject:`${subjectList}`}}>
+                <Link className = "btn1" to='/QuestionMenu' state = {{userName : `${userName}`,subject:`${subjectList}`}}>
                 Manage Questions >>
                 </Link>
                 </div>
                 
                 <div className = "btn1">
                
-                <Link className = "btn" to='/ManageTests' state = {{userName : `${userName}`,subject:`${subjectList}`}}>
+                <Link className = "btn" to='/QuizMenu' state = {{userName : `${userName}`,subject:`${subjectList}`}}>
                 Manage Tests >>
                 </Link>
                 </div>

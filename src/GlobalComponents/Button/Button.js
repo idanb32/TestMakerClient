@@ -21,7 +21,7 @@ function Button(props) {
 
 
     return (
-        <button className='btn' style={styles} onClick={props.action}>
+        <button className='MainButton' style={styles} onClick={props.action}>
             {textProp}
         </button>
     )
