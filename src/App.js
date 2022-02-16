@@ -13,9 +13,20 @@ const App = () => {
     <div className="App">
       in app im sane yay sdsdsdsd
       <MangeQuiz/>
-      <Router>
-
-      </Router>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />}>
+          
+          </Route>
+          <Route path="/MainMenu" element={<MainMenu />}>
+            
+          </Route>
+          <Route path="/Register" element={<Register />}>
+            
+          </Route>
+          
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

@@ -1,0 +1,44 @@
+.container{
+    
+    padding: 20px;
+    width: 600px;
+    height: 300px;
+    background-color:rgb(238, 237, 237);
+    border-style: solid;
+    border-color: rgb(83, 82, 82);
+    border-width:1px;
+    margin-left: 200px;
+    
+     
+    
+}
+.emailInput{
+    padding-top: 50px;
+    padding-left: 12rem;
+}
+.PasswordInput{
+    padding-top: 10px;
+    padding-left: 10.2rem;
+}
+.tagCont{
+    padding: 20px;
+    margin-left: 200px;
+}
+.btn2{
+    
+    border-radius: 5px;
+    padding-top: 50px;
+    padding-left: 15rem;
+}
+.forgot{
+    font-size: 14px;
+    padding-left: 15.2rem;
+    color : blue
+}
+.singUp{
+    margin-top : 30rem;
+    font-size: 14px;
+    padding-left: 32rem;
+    color : blue;
+   
+}
