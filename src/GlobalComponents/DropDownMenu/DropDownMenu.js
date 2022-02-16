@@ -1,55 +1,53 @@
-import { React,useEffect,useState } from "react";
-import GreenLine from "./GreenLine";
+import React from "react";
+import { useEffect, useState } from "react";
 
 function DropDownMenu(props) {
-  
-    
-    const [arrayOfopt,setArray] = useState(['ssss','wwww']);
-    const [numOfopt,setNumofOpt] = useState(arrayOfopt.length);
-    const [options,setOptions] = useState();
-    const [dropDownwidthSize,setWidthSize] = useState(props.width);
-    const [dropDownheightSize,setHeightSize] = useState(props.height);
-    const [flagGreen , setFlagGreen] = useState(false);
-    
-  useEffect(() => {
-      if(numOfopt > 0)
-        {
-            setOptions (arrayOfopt.map((option) =>
-        <option>{option}</option>
-            ))
+
+
+    const [arrayOfopt, setArrayOfopt] = useState(props.items);
+    const [numOfopt, setNumofOpt] = useState(props.items.length);
+    const [options, setOptions] = useState();
+    const [dropDownwidthSize, setWidthSize] = useState(props.width);
+    const [dropDownheightSize, setHeightSize] = useState(props.height);
+    const [flagGreen, setFlagGreen] = useState(false);
+
+    useEffect(() => {
+        setArrayOfopt();
+        setNumofOpt(arrayOfopt.length); 
+
+        if (numOfopt > 0) {
+            setOptions(arrayOfopt.map((option) => {
+                return <option value={option} key={option} className="option">{option}</option>
+            }))
         }
-  })
-  
-  const styles = 
-  {
-      width : `${dropDownwidthSize}`,
-      height :  `${dropDownheightSize}`,
-  }
-  const styles2 = 
-  {
-      width : `${dropDownwidthSize}`,
-      height :  `${dropDownheightSize}`,
-  }
-  
+    }, [ setNumofOpt, props.items])
+
+    const styles =
+    {
+        width: `${dropDownwidthSize}`,
+        height: `${dropDownheightSize}`,
+    }
+    const styles2 =
+    {
+        width: `${dropDownwidthSize}`,
+        height: `${dropDownheightSize}`,
+    }
+
     return (
-    <div>
-        {
-        flagGreen ? 
-        <select className = "noGreen" style={styles}>
-            {options} 
-            <GreenLine></GreenLine>
-        </select>
-        
-        :
-        <select className = "green" style={styles2}>
-            {options} 
-            <GreenLine></GreenLine>
-        </select>
-        }
-     
-        
-    </div>
-  );
+        <div>
+            {
+                flagGreen ?
+                    <select className="noGreen" style={styles} onChange={props.handleClicked} >
+                        {options}
+                    </select>
+
+                    :
+                    <select className="green" style={styles2} onChange={props.handleClicked}>
+                        {options}
+                    </select>
+            }
+        </div>
+    );
 }
 
 export default DropDownMenu;

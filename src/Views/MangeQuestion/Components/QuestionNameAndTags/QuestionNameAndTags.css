@@ -1,0 +1,19 @@
+.questionAndTags{
+
+}
+
+.questionName{
+    font-size: var(--font-sizeMed);
+    font-weight: bold;
+}
+
+.tags{
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-sizeSmall);
+
+}
+
+.tag{
+
+}

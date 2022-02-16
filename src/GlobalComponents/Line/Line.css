@@ -6,16 +6,16 @@
     justify-content: center;
     width: 100%;
 }
-.gray{
+.grayLine{
     background-color: var(--background-grey);
 }
-.orange{
+.orangeLine{
     background-color: var(--background-orange);
 }
-.white{
+.whiteLine{
     background-color: var(--background-white);
 }
-.green{
+.greenLine{
     background-color: var(--background-green);    
 }
 .PartLine{

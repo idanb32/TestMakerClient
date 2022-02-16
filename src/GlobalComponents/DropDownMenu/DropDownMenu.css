@@ -1,3 +1,4 @@
-.green{
-    border-color : green;
+.option{
+    background-color: var(--background-white);
+
 }

@@ -17,7 +17,7 @@ const Line = (props) => {
 
 
 
-    return (<div className={props.background + " Line"} onClick={props.onClick}>
+    return (<div className={props.background + "Line Line"} onClick={props.onClick}>
         {renderLine()}
     </div>
     )

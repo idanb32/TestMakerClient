@@ -7,4 +7,12 @@
     
 
     --main-font:  'Open Sans', sans-serif;
+    --font-sizeSmall:15px ;
+    --font-sizeMed:25px ;
+    --font-sizeBig:45px ;
+
+    --gap: 30px;
+    --gap-m: 15px;
+    --gap-s: 10px;
+
 }
