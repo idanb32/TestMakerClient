@@ -5,7 +5,7 @@ const Editor_w_Validator =(props)=>{
 
     return(<div className="EditorWValid">
         <TextEditor editorState={props.editorState} setEditorState={props.setEditorState} />
-        <div className="errorDisplay"> {props.error? props.error : ""}</div>
+        <div className="errorDisplay"> {props.error ? props.error : ""}</div>
     </div>
 
     );

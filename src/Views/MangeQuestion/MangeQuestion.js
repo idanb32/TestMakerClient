@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import MenuGrid from "../../GlobalComponents/MenuGrid/MenuGrid";
 import Input from "../../GlobalComponents/Input/Input";
@@ -80,7 +81,9 @@ const MangeQuestion = (props) => {
         </div>
         <MenuGrid items={formatedQuestion} />
         <div>
+            <Link to={`/EditQuestion`}>
             <Button text="Add new question" />
+            </Link>
             <Button text="Show all" action={showAll} />
         </div>
     </div>)

@@ -1,0 +1,10 @@
+.PosibleAnswer{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+.radioInput{
+    width: 20px;
+    height: 20px;
+    align-self: center;
+}
