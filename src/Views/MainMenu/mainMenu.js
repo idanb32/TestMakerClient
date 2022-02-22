@@ -6,33 +6,35 @@ import { Link, useParams,useLocation } from "react-router-dom";
 import SubjectService from "./Services/subjectService";
 
 
+
 const MainMenu = (props) => {
     const location = useLocation();
     const [userName,setUsername] = useState(location.state.name);
     const [subjectList,setSubjectList] = useState([]);
+    const [selectedOption, setSelectedOption] = useState('');
+
     
-          console.log(location.state.name);
-    
-    const update =()=>{
+      const update =()=>{
+          
+        return<DropDownMenu key={subjectList.length} className="drop" items={subjectList}  width = "200px" handleClicked={changed}></DropDownMenu> 
        
-        return<DropDownMenu key={subjectList.length} className="drop" items={subjectList}  width = "200px"></DropDownMenu> 
-            
-        
     } 
 
+    
+    const changed = (value) => {
+        console.log(value.target.value);
+        setSelectedOption(value.target.value);
+    }
+
    
-      useEffect(() => {
-          //console.log(this.props.match.params.id);
+      useEffect(async() => {
+        let arr = await SubjectService();
+        setSubjectList(arr);
           
 
 
-        if(subjectList != SubjectService()){
-          let x =  SubjectService();
-          setSubjectList(
-              x
-          )
-          console.log(5);}
-      },[userName])
+        
+      },[])
 
 
     return(
@@ -52,14 +54,14 @@ const MainMenu = (props) => {
                 </div>
                 <div className = "btn1">
                 
-                <Link className = "btn1" to='/QuestionMenu' state = {{userName : `${userName}`,subject:`${subjectList}`}}>
+                <Link className = "btn1" to='/QuestionMenu' state = {{userName : `${userName}`,subject:`${selectedOption}`}}>
                 Manage Questions >>
                 </Link>
                 </div>
                 
                 <div className = "btn1">
                
-                <Link className = "btn" to='/QuizMenu' state = {{userName : `${userName}`,subject:`${subjectList}`}}>
+                <Link className = "btn" to='/QuizMenu' state = {{userName : `${userName}`,subject:`${selectedOption}`}}>
                 Manage Tests >>
                 </Link>
                 </div>
@@ -68,7 +70,7 @@ const MainMenu = (props) => {
                 <div className = "btn1">
                 
 
-                <Link className = "btn" to='/Reports' state = {{userName :`${userName}`,subject:`${subjectList}`}} >
+                <Link className = "btn" to='/SearchReport' state = {{userName :`${userName}`,subject:`${selectedOption}`}} >
                     Reports >>
                 </Link>
                 </div>
