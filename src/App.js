@@ -29,6 +29,7 @@ const App = () => {
           </Route>
           <Route path='/QuizMenu' element={<MangeQuiz />}> </Route>
           <Route path='/QuestionMenu'  element={<MangeQuestion />} ></Route>
+          <Route path='/EditQuestion'  element={<EditQuestion />} ></Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -2,13 +2,16 @@ import "./Input.css";
 
 const Input = (props) => {
     return (
-        <div className="Input">
+        <div className="Input"  className={props.className}>
             <input
-                className={props.className}
+                className={props.classNameInput}
                 value={props.value}
                 onChange={props.onChange}
                 type={props.type || 'text'}
                 placeholder={props.placeholder}
+                onClick ={props.onClick}
+                checked={props.checked}
+                onChange = {props.onChange}
             />
         </div>
     )

@@ -5,7 +5,6 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 
 const TextEditor = (props) => {
-   
     const editor = useRef(null);
     function focusEditor() {
         editor.current.focus();

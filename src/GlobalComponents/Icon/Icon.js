@@ -5,7 +5,8 @@ const Icon =(props)=>{
         color: props.color
     };
 
-    <i className={props.className}  style={style} onClick={props.onClick}/>
+   return( <i className={props.className}  style={style} onClick={props.onClick}/>)
+
 
 }
 export default Icon;
