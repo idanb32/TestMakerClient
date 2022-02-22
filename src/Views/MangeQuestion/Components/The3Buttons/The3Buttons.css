@@ -3,3 +3,9 @@
     padding: var(--gap-s);
     gap: var(--gap-s);
 }
+.The3ButtonsAnswer{
+    display: flex;
+    border: 1px solid black;
+    gap: var(--gap-s);
+    padding: var(--gap-s);
+}

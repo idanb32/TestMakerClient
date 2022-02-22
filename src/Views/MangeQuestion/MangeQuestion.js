@@ -51,11 +51,22 @@ const MangeQuestion = (props) => {
             let newQuestion = {
                 questionNameAndTag: <QuestionNameAndTags Tags={question.questionTags} questionName={question.questionName} />,
                 questionType: question.questionType,
-                buttons: <The3Buttons id={question._id} />
+                buttons: <The3Buttons id={question._id} deleteClicked={deleteClicked}/>
             }
             newFormatedQuestion.push(newQuestion);
         });
         setFormatedQuestion(newFormatedQuestion);
+    }
+
+    const deleteClicked= (id)=>{
+        let windowRes = window.confirm("Are you sure you want to delete this question?");
+        if(windowRes){
+            axios.post(port+"Delete",{id:id})
+            .then(async(resault)=>{
+                await showAll();
+            })
+            .catch(err => console.log(err))
+        }
     }
 
     const showAll = () => {
@@ -71,6 +82,8 @@ const MangeQuestion = (props) => {
     useEffect(() => {
         showAll();
     }, []);
+
+
 
 
     return (<div><h1 className="heading-1">Mange Question </h1>

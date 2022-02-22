@@ -3,7 +3,6 @@ import "./Button.css";
 
 function Button(props) {
 
-    const [textProp, setTextProp] = useState(props.text);
     const [buttonColor, setButtonColor] = useState(props.color);
     const [backGroundcolor, setbackGroundcolor] = useState(props.backGroundcolor);
     const [actionContent, setActionContent] = useState(props.action);
@@ -22,7 +21,7 @@ function Button(props) {
 
     return (
         <button className='MainButton' style={styles} onClick={props.action}>
-            {textProp}
+            {props.text}
         </button>
     )
 }
