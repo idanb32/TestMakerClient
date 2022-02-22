@@ -1,0 +1,51 @@
+.errorDisplay{
+    color: red;
+}
+.heading-1{
+    font-weight: bold;
+}
+.EditQuestion{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    height: 100%;
+    background-color: var(--background-grey);
+}
+.EditQuestion .MainButton{
+    background-color: var(--light-blue) ;
+}
+.EditQuestion .Editor{
+    background-color: var(--background-white) ;
+}
+.QuestionText{
+    display: flex;
+    border: 1px solid black;
+}
+.answersWrapper{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    padding: var(--gap-s);
+    gap: var(--gap-s);
+}
+.verticalOrHor{
+    display: flex;
+    justify-content: space-between;
+}
+.editQuestionInputsWrapper{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    gap: var(--gap-s);
+}
+.editQuestionInputsWrapper .tags{
+    display: flex;
+    justify-content: center;
+    padding: var(--gap-s);
+    gap: var(--gap-s);
+
+}
+.editQuizButtons{
+    display: flex;
+    gap: var(--gap-s);
+}

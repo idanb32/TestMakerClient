@@ -51,7 +51,7 @@ const MangeQuestion = (props) => {
             let newQuestion = {
                 questionNameAndTag: <QuestionNameAndTags Tags={question.questionTags} questionName={question.questionName} />,
                 questionType: question.questionType,
-                buttons: <The3Buttons id={question._id}/>
+                buttons: <The3Buttons id={question._id} />
             }
             newFormatedQuestion.push(newQuestion);
         });
@@ -69,22 +69,24 @@ const MangeQuestion = (props) => {
     }
 
     useEffect(() => {
-         showAll();
+        showAll();
     }, []);
 
 
-    return (<div className="MangeQuestionPage">
-        <div className="inputDiv">
-            <Input placeholder="Search" onChange={changeInput} />
-            <Button text="Search" action={handleSearch} />
-            <DropDownMenu items={searchBy} handleClicked={changed} />
-        </div>
-        <MenuGrid items={formatedQuestion} />
-        <div>
-            <Link to={`/EditQuestion`}>
-            <Button text="Add new question" />
-            </Link>
-            <Button text="Show all" action={showAll} />
+    return (<div><h1 className="heading-1">Mange Question </h1>
+        <div className="MangeQuestionPage">
+            <div className="inputDiv">
+                <Input placeholder="Search" onChange={changeInput} className="searchBar" classNameInput="searchBar" />
+                <DropDownMenu items={searchBy} handleClicked={changed} />
+                <Button text="Search" action={handleSearch} />
+            </div>
+            <MenuGrid items={formatedQuestion} />
+            <div className="mangeQuestionBtn">
+                <Link to={`/EditQuestion`}>
+                    <Button text="Add new question" />
+                </Link>
+                <Button text="Show all" action={showAll} />
+            </div>
         </div>
     </div>)
 

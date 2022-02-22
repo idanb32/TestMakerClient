@@ -4,7 +4,7 @@
     border-radius: .3em;
 }
 
-.Input input {
+.Input .input {
     border: none;
     width: -webkit-fill-available;
     padding: var(--gap-s);

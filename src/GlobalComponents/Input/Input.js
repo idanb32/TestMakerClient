@@ -2,7 +2,7 @@ import "./Input.css";
 
 const Input = (props) => {
     return (
-        <div className="Input"  className={props.className}>
+        <div  className={props.className}>
             <input
                 className={props.classNameInput}
                 value={props.value}

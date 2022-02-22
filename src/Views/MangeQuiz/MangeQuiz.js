@@ -5,7 +5,7 @@ import MenuGrid from "../../GlobalComponents/MenuGrid/MenuGrid";
 import Input from "../../GlobalComponents/Input/Input";
 import Button from "../../GlobalComponents/Button/Button";
 import DropDownMenu from "../../GlobalComponents/DropDownMenu/DropDownMenu";
-import The3Buttons from "../MangeQuestion/Components/The3Buttons/The3Buttons";
+import The3Buttons from "./Components/The3Buttons/The3Buttons";
 import './MangeQuiz.css'
 
 import axios from "axios";
