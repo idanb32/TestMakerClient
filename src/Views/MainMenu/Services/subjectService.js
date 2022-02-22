@@ -11,12 +11,12 @@ const  SubjectService=async ()=>{
         if(response.data)
         {
             let arr = [];
-            console.log(response.data);
-            response.data.forEach(element => {
+            
+            response.data.map(element => {
                 arr.push(element.subjectName);
                 
             });
-            console.log(arr);
+            
             return arr;
             
         }

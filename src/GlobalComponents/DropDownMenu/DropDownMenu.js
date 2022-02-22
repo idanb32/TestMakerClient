@@ -12,12 +12,12 @@ function DropDownMenu(props) {
     const [flagGreen, setFlagGreen] = useState(false);
 
     useEffect(() => {
-        setArrayOfopt();
-        setNumofOpt(arrayOfopt.length); 
+       
+        
 
-        if (numOfopt > 0) {
-            setOptions(arrayOfopt.map((option) => {
-                return <option value={option} key={option} className="option">{option}</option>
+        if (numOfopt >= 0) {
+            setOptions(arrayOfopt.map((option,index) => {
+                return <option value={option} key={index} className="option">{option}</option>
             }))
         }
     }, [ setNumofOpt, props.items])
