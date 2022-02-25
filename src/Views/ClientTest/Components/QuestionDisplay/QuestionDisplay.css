@@ -1,0 +1,20 @@
+.QuestionDisplay{
+    display: flex;
+    gap: var(--gap-m);
+    border: 1px solid black;
+    flex-direction: column;
+}
+.answerWrapper{
+    border: 1px solid black;
+    padding: var(--gap-m);
+}
+.horizontal{
+    display: flex;
+}
+.vertical{
+    display: flex;
+    flex-direction: column;
+}
+.questionText{
+    
+}
