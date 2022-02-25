@@ -1,0 +1,29 @@
+.onTop{
+    z-index: 1000;
+    justify-items: center;
+    position:absolute;
+    height: 110%;
+    width: 70%;
+    background-color: #e6e6e6;
+    border-style: solid;
+    border-color: #F47B0A;
+    top: 10%;
+    left:10%;
+    border-radius: 10%;
+}
+.question{
+    border-radius: 15%;
+    margin-top: 1rem;
+    margin-left: 20%;
+    margin-right: 20%;
+    font-weight: 600;
+    border-style: solid;
+    border-color: black;
+}
+.header{
+    font-size: large;
+    margin-left: 40%;
+}
+.sideLeft{
+    float:right;
+}

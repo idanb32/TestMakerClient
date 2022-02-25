@@ -1,0 +1,80 @@
+.field{
+    
+    margin-left: 20%;
+    display:flex;
+    font-weight:bold;
+}
+.testType{
+    margin-left: 20%;
+    display:flex;
+    font-weight:bold;
+}
+.passingGrade{
+    margin-left: 20%;
+    display:flex;
+    font-weight:bold;
+}
+.testName{
+    font-weight:bold;
+    margin-left: 20%;
+    display:flex;
+}
+.generalTestDeatails{
+    width: 60%;
+    height: 60rem;
+    margin-left:20rem;
+    margin-right:20rem;
+}
+.headerTextEditor{
+    margin-top: 1rem;
+    font-weight:bold;
+    height: 10rem;
+}
+.passsingTestMssTextEditor{
+    font-weight:bold;
+    margin-top: 3rem;
+}
+.failTestMssTextEditor{
+    font-weight:bold;
+    margin-top: 3rem;
+}
+.questionContainer{
+    background-color:#e6e6e6;
+    border-radius: 1%;
+    width: 95%;
+    height: 60rem;
+    margin-left:2rem;
+ 
+}
+.selectQuestion{
+   margin: 1rem;
+}
+.topLine{
+    background-color:#F47B0A;
+
+}
+.fieldOfStudy{
+    margin-left: 20%;
+    display:flex;
+    font-weight:bold;
+}
+.generalTestDeatails{
+    background-color:#e6e6e6;
+    border-radius: 1%;
+    width: 95%;
+    margin-left:2rem;
+}
+
+.inTestNames{
+    text-align: center;
+    font-weight: bolder;
+    font-size: larger;
+    
+}
+/* .onTop{
+    z-index: 1000;
+    position:absolute;
+    height: 800px;
+    width: 800px;
+    background-color: black;
+} */
