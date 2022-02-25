@@ -1,0 +1,18 @@
+.clientMenu{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid black;
+    gap: var(--gap-s);
+    background-color: var(--background-grey);
+}
+.inputDiv{
+    display: grid;
+    grid-template-columns: 7fr 1fr 1fr;
+    gap: var(--gap-m);
+    padding: var(--gap-m);
+}
+.searchBar{
+    display: flex;
+    width: -webkit-fill-available ;
+}
