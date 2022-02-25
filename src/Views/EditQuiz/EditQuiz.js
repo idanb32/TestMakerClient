@@ -19,15 +19,26 @@ const EditQuiz = (props) =>
     const location = useLocation();
     const [passedSubject,setPassedSubject] = useState()
     const [qustionList,setQuestionList] = useState([]);
-    const [quizLeng,setQuizLen] = useState(["english","hebrew"]);
+    const [quizLeng,setQuizLen] = useState(["","english","hebrew"]);
     const [testType,setTestType] = useState(["predefined","ordinal"]);
     const [totalNumOfQuestion,setTotalNumOfQuestion] = useState(0);
     const [questionListForGrid,setQuestionListForGrid] = useState([]);
     const [loadedQuestionsNames,setLoadedQuestionsNames] = useState()
+    const [flagEmptyField,setFlagEmptyField] = useState(true)
+    const [answers, setAnswers] = useState([]);
+    //validation for answers , tags , horzintal and subject
+     const [nameError, setNameError] = useState("");
+     const [languegeError, setLanguegeError] = useState("");
+     const [gradeError, setGradeError] = useState("");
+     const [questionListError, setQuestionListError] = useState("");
+     const [headerError, setHeaderError] = useState("");
+     const [onPassError, setOnPassError] = useState("");
+     const [onFailError, setOnFailError] = useState("");
+
     
-    //Keep track if we are updating a quiz or adding a new one.
+     //Keep track if we are updating a quiz or adding a new one.
     const [isUpdate, setIsUpdate] = useState(false);
-    const [flagToAllQuestions,setFlagToAllQuestions] = useState(false);
+    const [flagToAllQuestions,setFlagToAllQuestions] = useState();
     const[flagToSelectedQuestions,setFlagToSelectedQuestions] = useState(false)
     //Keep track of the question id
     const [testId,setTestId] = useState();
@@ -43,6 +54,7 @@ const EditQuiz = (props) =>
     const [msgOnFail,setMsgOnFail] = useState();
     const [inputLangu,setInputLan] = useState();
     const [inputDate,setInputDate] = useState();
+    const [inputFieldOfStudy,setInputFieldOfStudy] = useState();
     const [modelToSave,setModelToSave] = useState({
         language : '',
         testName : '',
@@ -60,11 +72,10 @@ const EditQuiz = (props) =>
     useEffect(async ()=>{
         setQuestionList([])
         
-        if(false){
+        if(location.state !=null){
             setIsUpdate(true);
-            //let quiz = location.state.quiz
-            
-            let res = await retriveQuiz("620528c798e5e4d8ca344d9d");
+            console.log('got id'+location.state.quiz);
+            let res = await retriveQuiz(`${location.state.quiz}`);
             let resList = await retriveQuestions()
             let subjName = await getSubjectService(res.subjectOfStudying);
             let result =  await loadedQuestionsNamesHelper(res.questions)
@@ -88,6 +99,8 @@ const EditQuiz = (props) =>
             }
         }
         else{
+            
+            setFlagEmptyField(false);
             setTestQuestionsAdded([])
             console.log('no id were given to the page - starting from zero');
             let resList = await retriveQuestions()
@@ -128,7 +141,7 @@ const EditQuiz = (props) =>
           let newQuestions = {
             adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
             questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-            buttons: <Button text="Show"></Button>
+            buttons: <Button text="Show"  ></Button>
            }
            console.log(newQuestions)
            arr.push(newQuestions)
@@ -143,7 +156,18 @@ const EditQuiz = (props) =>
         setTotalNumOfQuestion();
         orderTheQ();
     }
+    const openCorrectAnswer =async (id)=>{
+       let res= retriveSpecificQuestionService(id);
+       let temp = res.questionAnswers.map((item)=>{
+        return {
+            answer: item.answer,
+            isCorrect: item.IsCorrect
+        }
+       })
+       setAnswers(temp)
 
+    }
+    
     const addQuestionToList =async (id)=>{
         console.log(testQuestionsAdded);
         const match = testQuestionsAdded.find(element => {
@@ -183,13 +207,16 @@ const EditQuiz = (props) =>
         //setFlagToSelectedQuestions(!flagToSelectedQuestions)
     }
     const handelShowAllQuestions=()=>{
-        setFlagToAllQuestions(!flagToAllQuestions)
+        setFlagToSelectedQuestions(!flagToSelectedQuestions)
+        setFlagToAllQuestions(false)
       
     }
-    const handelSaveQuiz=()=>{
-      
+    const handlefieldOfStudy=(value)=>{
+        setInputFieldOfStudy(value.target.value);
+        
     }
     const saveQuiz = ()=>{
+        console.log('in save');
        if(isUpdate)
        {
         let quiz={
@@ -232,35 +259,61 @@ const EditQuiz = (props) =>
 
     const validtion = ()=>{
         let flag = true
-        if(testName == '')
+        if(testName === "")
         {
             flag = false;
-            console.log('hre');
+            setNameError("Name is Empty")
         }
-        if(inputPassGrade == '')
-        {
-            flag = false;
-            console.log('hre');
+        else{
+            setNameError("")
         }
-        if(headerText == '')
+        if(inputLangu == "")
         {
             flag = false;
-            console.log('hre');
+            setLanguegeError("Languege is Empty")
         }
-        if(msgOnPass == '')
-        {
-            flag = false;
-            console.log('hre');
+        else{
+            setLanguegeError("")
         }
-        if(msgOnFail == '')
+        if(inputPassGrade == "")
         {
             flag = false;
-            console.log('hre');
+            setGradeError("Grade is Empty")
+        }
+        else{
+            setGradeError("")
+        }
+        if(headerText == "")
+        {
+            flag = false;
+            setHeaderError("Missing A header To The Test")
+        }
+        else{
+            setHeaderError("")
+        }
+        if(msgOnPass == "")
+        {
+            flag = false;
+            setOnPassError("Missing on Pass")
+        }
+        else{
+            setOnPassError("")
+        }
+        if(msgOnFail == "")
+        {
+            flag = false;
+            setOnFailError("Missing on Fail Text")
+        }
+        else{
+            setOnFailError("")
         }
         if(numberOfQAdded <= 0)
         {
             flag = false;
-            console.log('hre');
+            setQuestionListError("No Questions In the Quiz")
+        }
+        else{
+            setQuestionListError("")
         }
         return flag;
     }
@@ -293,12 +346,12 @@ const EditQuiz = (props) =>
         <div>
 
             <h1>NewTest</h1>
-            {flagToAllQuestions?<AllQuestions questionList = {qustionList}></AllQuestions>:<div></div>}
+            {!flagToSelectedQuestions?<AllQuestions questionList = {qustionList}></AllQuestions>:<div></div>}
             {false?<AllQuestions questionList = {loadedQuestionsNames}></AllQuestions>:<div></div>}
             <div className="generalTestDeatails">
 
             <div className="fieldOfStudy">
-                    <label>field Of Study:{passedSubject}</label>
+                    <label>field Of Study:{flagEmptyField?passedSubject:<Input value={inputFieldOfStudy} onChange={handlefieldOfStudy} />}</label>
                     {}
                     <label></label>
                     {/* <Input value={testName} onChange={handleTestName} /> */}
@@ -307,6 +360,7 @@ const EditQuiz = (props) =>
                 <div className="field">
                     <label>Languege :</label>
                     <DropDownMenu items={quizLeng} handleClicked={changedLengu}></DropDownMenu>
+                    <label className="errorDisplay">{languegeError}</label>
                 </div>
 
                 <div className="testType">
@@ -318,12 +372,13 @@ const EditQuiz = (props) =>
                     <label>test Name :</label>
                     {}
                     <Input value={testName} onChange={handleTestName} />
+                    <label className="errorDisplay">{nameError}</label>
                 </div>
 
                 <div className="passingGrade">
                     <label>passing Grade :</label>
-                    {}
                     <Input value={inputPassGrade} onChange={handlePassGrade} />
+                    <label className="errorDisplay">{gradeError}</label>
                 </div>
 
                 <div className="ShowAnswer">
@@ -333,17 +388,21 @@ const EditQuiz = (props) =>
 
                 <div className="headerTextEditor">
                     <label>Header:</label>
+                    <label className="errorDisplay">{headerError}</label>
                     <Editor_w_Validator changeAnswer={handleHeaderTextChanged}
                      default={isUpdate?`${headerText}`:`Header Text`} />
+                
                 </div>
 
                 <div className="passsingTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
+                    <label className="errorDisplay">{onPassError}</label>
                     <Editor_w_Validator changeAnswer={handleMssOnPassTextChanged}
                      default={isUpdate?`${msgOnPass}`:`Messege on Passing the Test`} />
                 </div>
                 <div className="failTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
+                    <label className="errorDisplay">{onFailError}</label>
                     <Editor_w_Validator changeAnswer={handleMssOnFailTextChanged}
                     default={isUpdate?`${msgOnFail}`:'Messege on Failing the Test'} />
                 </div>
@@ -373,7 +432,9 @@ const EditQuiz = (props) =>
                         <Button text='Show All Questions' width='200px' height = '20px' action = {handelShowAllQuestions}></Button>
                     </div>
                     <div>The test will includ {numberOfQAdded} questions in total </div>
-                    <div className="inTestNames">questions that in the test - {loadedQuestionsNames}</div>
+                    <div className="inTestNames">questions that in the test - {loadedQuestionsNames}
+                    <label className="errorDisplay">{questionListError}</label>
+                    </div>
                 </div>
 
             </div>

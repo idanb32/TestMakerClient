@@ -71,6 +71,9 @@
     font-size: larger;
     
 }
+.errorDisplay{
+    color: red;
+}
 /* .onTop{
     z-index: 1000;
     position:absolute;
