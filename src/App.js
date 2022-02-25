@@ -21,7 +21,7 @@ const App = () => {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />}>
+          <Route path="/" element={<LoginPage />}>
           
           </Route>
           <Route path="/MainMenu" element={<MainMenu />}>
