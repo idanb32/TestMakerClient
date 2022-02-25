@@ -19,14 +19,14 @@ const LoginPage = (history) => {
     setUserPassword(e.target.value);
   }
   function submit() {
-
+    if(userValue!="" && userPassword!="")
     LoginService(userValue, userPassword).then((result) => {
       console.log(result);
       if (result.userRole == "Admin") {
-        nav('/MainMenu');
+        nav('/MainMenu' ,{state:{name:result.userName}});
       }
       else {
-        nav('/ClientMenu',{state:{name:result.userName}});
+        nav('/ClientMenu',{state:{userId: result._id}});
       }
     }).catch((err) => console.log(err));
 

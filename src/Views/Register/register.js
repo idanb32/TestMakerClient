@@ -42,7 +42,7 @@ const Register = (props) => {
             then((res) => {
                 console.log(res);
                 if (res.userRole == "Student") {
-                    nav('/ClientMenu')
+                    nav('/ClientMenu',{state:{userId: res._id}})
                 }
                 else {
                     nav('/MainMenu',{state:{name:res.userName}})
