@@ -52,12 +52,13 @@ const handleShowQ= ()=>{
 
 }
 useEffect(async()=>{
-    handleShowQ();
-    let res = await SolvedService('tomer');
-    setListSolved(res);
-
     let result = await TestService('testName');
+    console.log(result);
     setTestName(result);
+    let res = await SolvedService(result._id);
+    console.log(res);
+    setListSolved(res);
+    handleShowQ();
 },[])
 
     return(

@@ -1,6 +1,6 @@
 import react from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import MenuGrid from "../../GlobalComponents/MenuGrid/MenuGrid";
 import Input from "../../GlobalComponents/Input/Input";
@@ -19,6 +19,8 @@ const ClientMenu = (props) => {
     const [searchBy, setSearchBy] = useState(["Name", "Language"]);
     const [quizes, setQuizes] = useState();
     const [selectedOption, setSelectedOption] = useState("Tags");
+    const location = useLocation();
+    const [userId,setUserId]=useState(location.state.userId);
     const nav = useNavigate();
 
     const changeInput = (value) => {
@@ -59,7 +61,7 @@ const ClientMenu = (props) => {
                 lastUpdate: quiz.date,
                 language: quiz.language,
                 buttons: <TakeMeButton id={quiz._id} testName={quiz.testName} text={"Take this test"}
-                    userId={props.userId} takeThis={takeTest} />
+                    userId={userId} takeThis={takeTest} />
             }
             newFormatedQuiz.push(newDisplayQuiz);
         });

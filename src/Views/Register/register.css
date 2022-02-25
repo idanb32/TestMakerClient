@@ -7,6 +7,7 @@
 
 .container{
     padding-top: 20px;
+    padding-bottom: 100px;
     width: 600px;
     height: 300px;
     background-color:rgb(238, 237, 237);
@@ -15,4 +16,14 @@
     border-width:1px;
     margin-left: 200px;
     
+}
+
+.usernameInput{
+    margin-left: 10.2rem;
+}
+.registerBtn{
+    border-radius: 25px;
+}
+.registerbuttons{
+    gap: var(--gap);
 }
