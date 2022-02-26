@@ -1,6 +1,6 @@
 import Editor_w_Validator from "../EditQuestion/Components/Editor_W_Validation/Editor_W_Validator";
 import DropDownMenu from "../../GlobalComponents/DropDownMenu/DropDownMenu";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import Button from "../../GlobalComponents/Button/Button";
 import Input from "../../GlobalComponents/Input/Input";
 import { Link, useLocation } from "react-router-dom";
@@ -14,6 +14,8 @@ import getSubjectService from "./Services/getSubjectService";
 import updateQuizService from "./Services/updateQuizService";
 import retriveSpecificQuestionService from "./Services/retriveSpecificQuestionService";
 import AllQuestions from "./Componnets/allQuestions";
+import getSubjectByName from "./Services/getSubjectByName";
+import { set } from "draft-js/lib/EditorState";
 const EditQuiz = (props) => 
 {
     const location = useLocation();
@@ -26,6 +28,10 @@ const EditQuiz = (props) =>
     const [loadedQuestionsNames,setLoadedQuestionsNames] = useState()
     const [flagEmptyField,setFlagEmptyField] = useState(true)
     const [answers, setAnswers] = useState([]);
+    const [arrayBiggerThan10,setArrayBiggerThan10]= useState(false);
+    const [indexOFBiggerThan10,setIndexOFBiggerThan10]=useState(0);
+    const indexRef = useRef(0);
+
     //validation for answers , tags , horzintal and subject
      const [nameError, setNameError] = useState("");
      const [languegeError, setLanguegeError] = useState("");
@@ -34,6 +40,7 @@ const EditQuiz = (props) =>
      const [headerError, setHeaderError] = useState("");
      const [onPassError, setOnPassError] = useState("");
      const [onFailError, setOnFailError] = useState("");
+     const [firstRender,setFirstRender] = useState(true)
 
     
      //Keep track if we are updating a quiz or adding a new one.
@@ -55,6 +62,8 @@ const EditQuiz = (props) =>
     const [inputLangu,setInputLan] = useState();
     const [inputDate,setInputDate] = useState();
     const [inputFieldOfStudy,setInputFieldOfStudy] = useState();
+    const [fieldOfStudyId,setFieldOfStudyId] = useState();
+    const [inputTestType,setInputTestType] = useState("");
     const [modelToSave,setModelToSave] = useState({
         language : '',
         testName : '',
@@ -72,7 +81,7 @@ const EditQuiz = (props) =>
     useEffect(async ()=>{
         setQuestionList([])
         
-        if(location.state !=null){
+        if(location.state.quiz !=null){
             setIsUpdate(true);
             console.log('got id'+location.state.quiz);
             let res = await retriveQuiz(`${location.state.quiz}`);
@@ -99,7 +108,11 @@ const EditQuiz = (props) =>
             }
         }
         else{
-            
+            console.log( "subject:"+location.state.subject);
+            setInputFieldOfStudy(location.state.subject);
+            let subjectId = await getSubjectByName(location.state.subject);
+            console.log(subjectId._id);
+            setFieldOfStudyId(subjectId._id);
             setFlagEmptyField(false);
             setTestQuestionsAdded([])
             console.log('no id were given to the page - starting from zero');
@@ -109,7 +122,7 @@ const EditQuiz = (props) =>
             setTotalNumOfQuestion(resList.data.length)
         }
         
-
+        setFirstRender(false)
 
     },[retriveQuiz,setIsUpdate])
     
@@ -129,26 +142,43 @@ const EditQuiz = (props) =>
     const orderTheQ = (qustionList)=>{
         setQuestionListForGrid([])
         console.log("inside order");
+      
         let arr = []
         let titles = {
-            title: "Currently showing -- questions",
+            title: `Currently showing ${qustionList.length} questions`,
             buttons : ""
         }
         arr.push(titles);
-      
-        qustionList.forEach((e)=>{
-            console.log(e.questionTags);
-          let newQuestions = {
-            adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
-            questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-            buttons: <Button text="Show"  ></Button>
-           }
-           console.log(newQuestions)
-           arr.push(newQuestions)
-        })
-       
-        console.log(qustionList);
+        if(qustionList.length >10)
+        {
+            setArrayBiggerThan10(true);
+            indexRef.current = 10;
+            console.log('in first-' +`${indexRef.current}`);
+            for(var i=0;i<10;i++)
+            {
+                let e = qustionList[i];
+                let newQuestions = {
+                    adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
+                    questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
+                    buttons: <Button text="Show"  ></Button>
+                   }
+                arr.push(newQuestions);
+            }
+        }
+        else{
+            qustionList.forEach((e)=>{
+            
+                let newQuestions = {
+                  adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
+                  questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
+                  buttons: <Button text="Show"  ></Button>
+                 }
+                 arr.push(newQuestions)
+              })
+              
+        }
         setQuestionListForGrid(arr);
+        
     }
 
     const setItemsOnLoadWithID =(model)=>{
@@ -156,17 +186,7 @@ const EditQuiz = (props) =>
         setTotalNumOfQuestion();
         orderTheQ();
     }
-    const openCorrectAnswer =async (id)=>{
-       let res= retriveSpecificQuestionService(id);
-       let temp = res.questionAnswers.map((item)=>{
-        return {
-            answer: item.answer,
-            isCorrect: item.IsCorrect
-        }
-       })
-       setAnswers(temp)
-
-    }
+    
     
     const addQuestionToList =async (id)=>{
         console.log(testQuestionsAdded);
@@ -189,7 +209,7 @@ const EditQuiz = (props) =>
     }
 
     const changedTestType = (value) => {
-        setTestType(value.target.value);
+        setInputTestType(value.target.value);
 
     }
     
@@ -216,6 +236,8 @@ const EditQuiz = (props) =>
         
     }
     const saveQuiz = ()=>{
+        if(firstRender== false)
+        {
         console.log('in save');
        if(isUpdate)
        {
@@ -239,6 +261,7 @@ const EditQuiz = (props) =>
        {
         if(validtion()) 
        {
+           console.log(fieldOfStudyId);
        let quiz={
             language :"english",
             testName : testName,
@@ -249,12 +272,12 @@ const EditQuiz = (props) =>
             msgOnFailBody : msgOnFail,
             questions : testQuestionsAdded,
             date :Date.now(),
-            subjectOfStudying : "something"
+            subjectOfStudying : fieldOfStudyId
         }
         saveQuestionsService(quiz)
        }
-        }
-
+     }
+    }
     }
 
     const validtion = ()=>{
@@ -315,6 +338,15 @@ const EditQuiz = (props) =>
         else{
             setQuestionListError("")
         }
+
+        if(flag == false)
+        {
+            let windowRes = window.confirm("Cant Add Test Cuz of The folowing:" + `${questionListError}`+"\n"+ `${onFailError}`+"\n")+ `${onPassError}`+"\n"
+            + `${gradeError}`+"\n"+ `${nameError}`+"\n";
+            if(windowRes){
+                console.log('ok');
+            }
+        }
         return flag;
     }
     const handleTestName=(value)=>{
@@ -326,7 +358,86 @@ const EditQuiz = (props) =>
     }
     
     const handelNextQuestions=()=>{
+        if(arrayBiggerThan10 )
+        {
+            indexRef.current = indexRef.current+10
+            makeNewQuestionGrid('next')
+            
+        }
 
+    }
+    const handelBackQuestions = ()=>{
+        if(firstRender==false)
+        {
+        if(arrayBiggerThan10==false)
+        {
+            return
+        }
+        indexRef.current = indexRef.current-10;
+        
+        console.log(indexRef.current);
+        makeNewQuestionGrid('back');
+        console.log('inside getBack'); 
+        }
+    }
+    const makeNewQuestionGrid=(op)=>{
+        setQuestionListForGrid([])
+        console.log("inside next questions");
+        
+        let arr = []
+        let titles = {
+            title: `Currently showing ${indexRef.current}-${indexRef.current+10} questions`,
+            buttons : ""
+        }
+        arr.push(titles);
+
+        if(op =='next'){
+
+        var range = indexRef.current;
+       
+        //indexRef.current =range + 10;
+        for(var i =range;i<range+10;i++)
+        {
+            console.log(i);
+            if(qustionList[i] == null)
+            {
+                break;
+            }
+            let e = qustionList[i];
+            let newQuestions = {
+                adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
+                questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
+                buttons: <Button text="Show"  ></Button>
+               }
+            arr.push(newQuestions);
+        }
+        console.log(indexRef.current);
+        setQuestionListForGrid(arr);
+        }
+        else{
+            
+        var range = indexRef.current;
+        console.log(range);
+        //indexRef.current =range - 10;
+        for(var i =range;i<range+10;i++)
+        {
+            console.log(i);
+            if(qustionList[i] == null)
+            {
+                break;
+            }
+            let e = qustionList[i];
+            let newQuestions = {
+                adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
+                questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
+                buttons: <Button text="Show"  ></Button>
+               }
+            arr.push(newQuestions);
+        }
+        console.log(indexRef.current);
+        setQuestionListForGrid(arr);
+        
+        }
     }
 
     const handleHeaderTextChanged=(text)=>{
@@ -360,7 +471,7 @@ const EditQuiz = (props) =>
                 <div className="field">
                     <label>Languege :</label>
                     <DropDownMenu items={quizLeng} handleClicked={changedLengu}></DropDownMenu>
-                    <label className="errorDisplay">{languegeError}</label>
+                    {/* <label className="errorDisplay">{languegeError}</label> */}
                 </div>
 
                 <div className="testType">
@@ -372,13 +483,13 @@ const EditQuiz = (props) =>
                     <label>test Name :</label>
                     {}
                     <Input value={testName} onChange={handleTestName} />
-                    <label className="errorDisplay">{nameError}</label>
+                    {/* <label className="errorDisplay">{nameError}</label> */}
                 </div>
 
                 <div className="passingGrade">
                     <label>passing Grade :</label>
                     <Input value={inputPassGrade} onChange={handlePassGrade} />
-                    <label className="errorDisplay">{gradeError}</label>
+                    {/* <label className="errorDisplay">{gradeError}</label> */}
                 </div>
 
                 <div className="ShowAnswer">
@@ -388,7 +499,7 @@ const EditQuiz = (props) =>
 
                 <div className="headerTextEditor">
                     <label>Header:</label>
-                    <label className="errorDisplay">{headerError}</label>
+                    {/* <label className="errorDisplay">{headerError}</label> */}
                     <Editor_w_Validator changeAnswer={handleHeaderTextChanged}
                      default={isUpdate?`${headerText}`:`Header Text`} />
                 
@@ -396,13 +507,13 @@ const EditQuiz = (props) =>
 
                 <div className="passsingTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
-                    <label className="errorDisplay">{onPassError}</label>
+                    {/* <label className="errorDisplay">{onPassError}</label> */}
                     <Editor_w_Validator changeAnswer={handleMssOnPassTextChanged}
                      default={isUpdate?`${msgOnPass}`:`Messege on Passing the Test`} />
                 </div>
                 <div className="failTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
-                    <label className="errorDisplay">{onFailError}</label>
+                    {/* <label className="errorDisplay">{onFailError}</label> */}
                     <Editor_w_Validator changeAnswer={handleMssOnFailTextChanged}
                     default={isUpdate?`${msgOnFail}`:'Messege on Failing the Test'} />
                 </div>
@@ -418,15 +529,23 @@ const EditQuiz = (props) =>
                 </div>
                 
                 <div className="upperQuestion">
-                    <div>Note:this test is set to be</div>
+                    <div>Note:this test is set to be "{inputTestType}"</div>
+                    <ul>
+                        <li>All the questions u select will be in the test</li>
+                        <li>all repdents each respondent to recive </li>
+                        </ul>
+                        
                 </div>
                 <div className="selectQuestion">
                     <h4>select the questions that you want to includ in the test:</h4>
-                    <div></div>
+                    <div>
+                        <label>Fillter by content</label> <input type="text"></input>
+                    </div>
                     
                     <MenuGrid items ={questionListForGrid}></MenuGrid>
                     <div className="buttonLine">
-                        Showing {totalNumOfQuestion} of {totalNumOfQuestion}   
+                        Showing {totalNumOfQuestion} of {totalNumOfQuestion} 
+                        {arrayBiggerThan10?<Button text='Back' width='65px' height = '20px' action = {handelBackQuestions}></Button>:""}  
                         <Button text='Next' width='65px' height = '20px' action = {handelNextQuestions}></Button>
                         <Button text='Show Selected Only' width='200px' height = '20px' action = {handelShowOnlySelected}></Button>
                         <Button text='Show All Questions' width='200px' height = '20px' action = {handelShowAllQuestions}></Button>

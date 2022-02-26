@@ -7,7 +7,7 @@ const getSubjectService =async (id)=>{
     try {
         let body = {"id":`${id}`}
         let response = await axios.post(port,body);
-        console.log(response);
+        
         return response;
         }
         catch (e)

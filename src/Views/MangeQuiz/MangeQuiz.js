@@ -36,6 +36,17 @@ const MangeQuiz = (props) => {
         })
         formatModelClosed(searchRes.data);
     }
+    const deleteClicked= (id)=>{
+        let windowRes = window.confirm("Are you sure you want to delete this quiz?");
+        if(windowRes){
+            axios.post(port+"Delete",{id:id})
+            .then(async(resault)=>{
+                console.log('afterDel');
+                await showAll();
+            })
+            .catch(err => console.log(err))
+        }
+    }
 
     const formatModelClosed = (quizList) => {
         setFormatedQuiz([]);
@@ -57,7 +68,7 @@ const MangeQuiz = (props) => {
                 numOfQuestion: numOfQuestion,
                 lastUpdate: quiz.date,
                 language: quiz.language,
-                buttons: <The3Buttons id={quiz._id}/>
+                buttons: <The3Buttons id={quiz._id}  deleteClicked={deleteClicked}/>
             }
             newFormatedQuiz.push(newDisplayQuiz);
         });
@@ -88,7 +99,7 @@ const MangeQuiz = (props) => {
         </div>
         <MenuGrid items={formatedQuiz} />
         <div>
-            <Link to='/EditQuiz'  >
+            <Link to='/EditQuiz' state={{subject:`${subjectOption}`}} >
             <Button text="Add new quiz" />
             </Link>
             

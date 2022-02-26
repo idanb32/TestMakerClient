@@ -7,7 +7,7 @@ const retriveQuiz =async (id)=>{
     try {
         let body ={"id":id}
         let response = await axios.post(port,body);
-        console.log(response.data.questions);
+       
         return response.data;
         }
         catch (e)
