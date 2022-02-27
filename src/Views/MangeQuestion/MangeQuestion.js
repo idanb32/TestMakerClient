@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import MenuGrid from "../../GlobalComponents/MenuGrid/MenuGrid";
 import Input from "../../GlobalComponents/Input/Input";
@@ -19,7 +19,7 @@ const MangeQuestion = (props) => {
     const [searchBy, setSearchBy] = useState(["Tags", "Name"]);
     const [questions, setQuestions] = useState();
     const [selectedOption, setSelectedOption] = useState("Tags");
-
+    const location = useLocation();
 
     const changeInput = (value) => {
         setInputText(value.target.value);
@@ -51,21 +51,35 @@ const MangeQuestion = (props) => {
             let newQuestion = {
                 questionNameAndTag: <QuestionNameAndTags Tags={question.questionTags} questionName={question.questionName} />,
                 questionType: question.questionType,
-                buttons: <The3Buttons id={question._id} deleteClicked={deleteClicked}/>
+                buttons: <The3Buttons id={question._id} deleteClicked={deleteClicked} />
             }
             newFormatedQuestion.push(newQuestion);
         });
         setFormatedQuestion(newFormatedQuestion);
     }
 
-    const deleteClicked= (id)=>{
+    const deleteClicked = (id) => {
         let windowRes = window.confirm("Are you sure you want to delete this question?");
-        if(windowRes){
-            axios.post(port+"Delete",{id:id})
-            .then(async(resault)=>{
-                await showAll();
+        if (windowRes) {
+            axios.post(port + "Delete", { id: id })
+                .then(async (resault) => {
+                    await showAll();
+                })
+                .catch(err => console.log(err))
+        }
+    }
+
+    const showAllSub = (subject) => {
+        if (subject)
+            axios.post(port + "getallSubject", { subject: subject }).then((questionsList) => {
+                formatModelClosed(questionsList.data);
+                setQuestions(questionsList.data);
             })
-            .catch(err => console.log(err))
+                .catch((errorList) => {
+                    console.log(errorList);
+                });
+        else {
+
         }
     }
 
@@ -80,7 +94,10 @@ const MangeQuestion = (props) => {
     }
 
     useEffect(() => {
-        showAll();
+        if (location.state.subject)
+            showAllSub(location.state.subject);
+        else
+            showAll();
     }, []);
 
 

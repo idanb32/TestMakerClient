@@ -14,6 +14,8 @@ import ClientMenu from './Views/ClientMenu/ClientMenu';
 import EditQuiz from './Views/EditQuiz/EditQuiz';
 import SearchReport from './Views/SearchReport/SearchReport';
 import TestReport from './Views/TestReport/TestReport';
+import CurrentReport from './Views/CurrentReport/CurrentReport';
+
 
 const App = () => {
   
@@ -37,6 +39,7 @@ const App = () => {
           <Route path='/ClientTest'  element={<ClientTest  />} ></Route>
           <Route path='/FinishedTest'  element={<ClientFinishedTest />} ></Route>
           <Route path='/ClientMenu'  element={<ClientMenu />} ></Route>
+          <Route path='/CurrentReport'  element={<CurrentReport />} ></Route>
           <Route path='/SearchReport'  element={<SearchReport  />} ></Route>
           <Route path='/TestReport'  element={<TestReport  />} ></Route>
         </Routes>

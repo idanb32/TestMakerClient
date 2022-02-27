@@ -1,0 +1,10 @@
+.testInfo{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;   
+    gap: var(--gap-m);
+    padding: var(--gap-s);
+}
+.answer{
+    padding: var(--gap-s);
+}
