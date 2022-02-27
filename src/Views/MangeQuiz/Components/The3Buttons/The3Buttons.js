@@ -20,7 +20,7 @@ const The3Buttons =(props)=>{
 
 
     return(<div className="threeButtons">
-        <Button text="Show" action={props.showClicked} />
+        <Button  action={props.showClicked} />
         <Link to={`/EditQuiz`}  state={{ quiz: id,subject:"" }} >
         <Button text="Edit" action={props.editClicked} />
         </Link>

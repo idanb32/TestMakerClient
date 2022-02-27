@@ -43,11 +43,38 @@ const handleBack = () => {
 
 }
 const handleGenerateReport = () => {
-    return navigate('/TestReport',{state:{testName:selectedOption,fromDatePass:fromDate,toDatePass:toDate}});
+    console.log(valid()); 
+    if(false)
+    if(allTimeState)
+    {
+        valid()
+        return navigate('/TestReport',{state:{testName:selectedOption,fromDatePass:fromDate,toDatePass:toDate}});
+    }
+    else{
+
+    }
+    
 
 }
-const anyEvent=()=>{
-console.log('clicked');
+const valid=()=>{
+
+    let flag = true;
+    if(allTimeState)
+    {
+        console.log(testName);
+        if(testName == 'nothing found')
+        flag = false
+
+    }
+    else 
+    {
+        console.log(allTimeState);
+        if(fromDate!= undefined&&toDate!= undefined)
+        flag = false
+        
+
+    }
+    return flag;
 
 }
 function onChangeValue(event) {

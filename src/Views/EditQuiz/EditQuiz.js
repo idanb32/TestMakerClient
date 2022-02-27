@@ -60,22 +60,10 @@ const EditQuiz = (props) =>
     const [msgOnPass,setMsgOnPass] = useState();
     const [msgOnFail,setMsgOnFail] = useState();
     const [inputLangu,setInputLan] = useState();
-    const [inputDate,setInputDate] = useState();
     const [inputFieldOfStudy,setInputFieldOfStudy] = useState();
     const [fieldOfStudyId,setFieldOfStudyId] = useState();
     const [inputTestType,setInputTestType] = useState("");
-    const [modelToSave,setModelToSave] = useState({
-        language : '',
-        testName : '',
-        passingGrade : '',
-        msgOnPassSubject:'',
-        msgOnPassBody: '',
-        msgOnFailSubject : '',
-        msgOnFailBody : '',
-        questions:[],
-        date :'',
-        subjectOfStudying : ''
-    });
+    
     
 
     useEffect(async ()=>{
@@ -210,12 +198,12 @@ const EditQuiz = (props) =>
 
     const changedTestType = (value) => {
         setInputTestType(value.target.value);
-
     }
     
     const changedLengu = (value) => {
         setQuizLen(value.target.value);
         setInputLan(value.target.value);
+        setLanguegeError("")
 
     }
     
@@ -341,8 +329,8 @@ const EditQuiz = (props) =>
 
         if(flag == false)
         {
-            let windowRes = window.confirm("Cant Add Test Cuz of The folowing:" + `${questionListError}`+"\n"+ `${onFailError}`+"\n")+ `${onPassError}`+"\n"
-            + `${gradeError}`+"\n"+ `${nameError}`+"\n";
+            let windowRes = window.confirm("Cant Add Test Cuz of The folowing:" + `${questionListError}`+ `${onFailError}`+"\n"+ `${onPassError}`+"\n"
+            + `${gradeError}`+"\n"+ `${nameError}`+"\n");
             if(windowRes){
                 console.log('ok');
             }
@@ -351,19 +339,24 @@ const EditQuiz = (props) =>
     }
     const handleTestName=(value)=>{
         setTestName(value.target.value);
+        setNameError("");
     }
 
     const handlePassGrade=(value)=>{
         setPassingGrade(value.target.value);
+        setGradeError("")
     }
     
     const handelNextQuestions=()=>{
+       if(firstRender == false)
+       {
         if(arrayBiggerThan10 )
         {
             indexRef.current = indexRef.current+10
             makeNewQuestionGrid('next')
             
         }
+    }
 
     }
     const handelBackQuestions = ()=>{
@@ -456,7 +449,7 @@ const EditQuiz = (props) =>
     return(
         <div>
 
-            <h1>NewTest</h1>
+            <h1>Edit/Make New Test</h1>
             {!flagToSelectedQuestions?<AllQuestions questionList = {qustionList}></AllQuestions>:<div></div>}
             {false?<AllQuestions questionList = {loadedQuestionsNames}></AllQuestions>:<div></div>}
             <div className="generalTestDeatails">
@@ -464,14 +457,14 @@ const EditQuiz = (props) =>
             <div className="fieldOfStudy">
                     <label>field Of Study:{flagEmptyField?passedSubject:<Input value={inputFieldOfStudy} onChange={handlefieldOfStudy} />}</label>
                     {}
-                    <label></label>
+                    
                     {/* <Input value={testName} onChange={handleTestName} /> */}
                 </div>
                
                 <div className="field">
                     <label>Languege :</label>
                     <DropDownMenu items={quizLeng} handleClicked={changedLengu}></DropDownMenu>
-                    {/* <label className="errorDisplay">{languegeError}</label> */}
+                    <label className="errorDisplay">{languegeError}</label>
                 </div>
 
                 <div className="testType">
@@ -483,13 +476,13 @@ const EditQuiz = (props) =>
                     <label>test Name :</label>
                     {}
                     <Input value={testName} onChange={handleTestName} />
-                    {/* <label className="errorDisplay">{nameError}</label> */}
+                    <label className="errorDisplay">{nameError}</label>
                 </div>
 
                 <div className="passingGrade">
                     <label>passing Grade :</label>
                     <Input value={inputPassGrade} onChange={handlePassGrade} />
-                    {/* <label className="errorDisplay">{gradeError}</label> */}
+                    <label className="errorDisplay">{gradeError}</label>
                 </div>
 
                 <div className="ShowAnswer">
@@ -499,7 +492,7 @@ const EditQuiz = (props) =>
 
                 <div className="headerTextEditor">
                     <label>Header:</label>
-                    {/* <label className="errorDisplay">{headerError}</label> */}
+                    <label className="errorDisplay">{headerError}</label>
                     <Editor_w_Validator changeAnswer={handleHeaderTextChanged}
                      default={isUpdate?`${headerText}`:`Header Text`} />
                 
@@ -507,13 +500,13 @@ const EditQuiz = (props) =>
 
                 <div className="passsingTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
-                    {/* <label className="errorDisplay">{onPassError}</label> */}
+                    <label className="errorDisplay">{onPassError}</label>
                     <Editor_w_Validator changeAnswer={handleMssOnPassTextChanged}
                      default={isUpdate?`${msgOnPass}`:`Messege on Passing the Test`} />
                 </div>
                 <div className="failTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
-                    {/* <label className="errorDisplay">{onFailError}</label> */}
+                    <label className="errorDisplay">{onFailError}</label>
                     <Editor_w_Validator changeAnswer={handleMssOnFailTextChanged}
                     default={isUpdate?`${msgOnFail}`:'Messege on Failing the Test'} />
                 </div>

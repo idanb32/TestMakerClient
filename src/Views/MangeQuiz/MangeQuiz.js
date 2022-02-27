@@ -19,6 +19,7 @@ const MangeQuiz = (props) => {
     const [quizes, setQuizes] = useState();
     const [selectedOption, setSelectedOption] = useState("Tags");
     const [subjectOption,setSubjectOption] = useState(location.state.subject);
+    const [firstRender,setFirstRender] = useState(true)
 
     const changeInput = (value) => {
         setInputText(value.target.value);
@@ -37,6 +38,7 @@ const MangeQuiz = (props) => {
         formatModelClosed(searchRes.data);
     }
     const deleteClicked= (id)=>{
+        if(firstRender == false){
         let windowRes = window.confirm("Are you sure you want to delete this quiz?");
         if(windowRes){
             axios.post(port+"Delete",{id:id})
@@ -45,7 +47,7 @@ const MangeQuiz = (props) => {
                 await showAll();
             })
             .catch(err => console.log(err))
-        }
+        }}
     }
 
     const formatModelClosed = (quizList) => {
@@ -88,6 +90,7 @@ const MangeQuiz = (props) => {
     useEffect(() => {
         console.log(subjectOption);
         showAll();
+        setFirstRender(false);
     }, []);
 
 
