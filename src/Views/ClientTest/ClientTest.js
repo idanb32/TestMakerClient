@@ -47,7 +47,6 @@ const ClientTest = (props) => {
                 handleAnswer={handleAnswer} />
     }
     const handleAnswer = (id) => {
-        console.log(id);
         let tmp = userAnswers;
         tmp[currentNav] = id;
         setUserAnswers(tmp);

@@ -50,18 +50,13 @@ const CurrentReport = () => {
 
     useEffect(async () => {
         if (!state.state) return;
-        console.log(state.state);
         let solvedQuiz = await axios.post(port + "get", { id: state.state.solvedId });
-        console.log(solvedQuiz.data);
         let tmp = await axios.post(Quizport + "GetQuizQuestion", { id: state.state.quiz._id });
-        console.log(tmp.data);
         setUserAnswers(solvedQuiz.data.userAnswer);
         setUserName(state.state.userName);
         setQuiz(tmp.data);
         setScore(solvedQuiz.data.score)
         setDateTaken(solvedQuiz.data.dateTaken);
-        console.log(state.state.testName);
-        console.log(state.state);
         setTestName(state.state.testName)
     }, [])
 

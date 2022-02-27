@@ -57,7 +57,6 @@ const EditQuestion = (props) => {
     useEffect(() => {
         if (location.state) {
             let question = location.state.question2;
-            console.log(location.state)
             setIsUpdate(true);
             setQuestionId(question._id);
             handleSetTags(question.questionTags);
@@ -133,7 +132,6 @@ const EditQuestion = (props) => {
             if (tmp.includes(value)) {
                 let newTmp = tmp.filter(e => e !== value)
                 setCorrectOptions(newTmp);
-                console.log(correctOptions);
             }
             else {
                 tmp.push(value)
@@ -186,7 +184,6 @@ const EditQuestion = (props) => {
         return arrayOfAnswers;
     }
     const getQuestionAnswers = () => {
-        console.log(`in getQuestionAnswers`)
         if (selectedType == "One answer") {
             let questionAnswerFormated = answers.map((item) => {
                 let indexOfItem = answers.indexOf(item);
@@ -198,7 +195,6 @@ const EditQuestion = (props) => {
                     })
             });
             let filterArr = questionAnswerFormated.filter(i => i != 'undefined' && i != null)
-            console.log(filterArr);
             return filterArr;
         }
         else {
@@ -213,15 +209,12 @@ const EditQuestion = (props) => {
 
             });
             let filterArr = questionAnswerFormated.filter(i => i != 'undefined' && i != null)
-            console.log(correctOptions);
-            console.log(filterArr);
             return filterArr;
         }
     }
 
     const saveClicked = () => {
         if (valdiate()) {
-            console.log(`passedValidate`)
             let tagArr = tags.split(" ");
             let isHorizntoal = horizontalOption == "horizontal";
             let chosenQuestionType;
@@ -242,7 +235,6 @@ const EditQuestion = (props) => {
                     subject: subject
                 }
                 axios.post(port + "Update", question).then((result) => {
-                    console.log(result.data);
                 })
                     .catch(error => console.log(error));
             }
@@ -257,7 +249,6 @@ const EditQuestion = (props) => {
                     subject: subject
                 }
                 axios.post(port + "Add", question).then((result) => {
-                    console.log(result.data);
                 })
                     .catch(error2 => console.log(error2));
             }
@@ -309,7 +300,6 @@ const EditQuestion = (props) => {
         }
         let answerMsg = "";
         if (answers.length == 0 || answers == null || answers == 'undefiend') {
-            console.log(`answers empty ${answers}`)
             flag = false;
             answerMsg = "Please make sure that all the answers are filled. ";
             setAnswerError(answerMsg);
@@ -317,8 +307,6 @@ const EditQuestion = (props) => {
         else {
             answers.forEach(element => {
                 if (element == 'undefiend' || element == null || element == "") {
-                    console.log(`element is empty ${element}`);
-                    console.log(answers)
                     flag = false;
                     answerMsg = "Please make sure that all the answers are filled. ";
                     setAnswerError(answerMsg);

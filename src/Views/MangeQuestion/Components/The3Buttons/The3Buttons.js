@@ -11,7 +11,7 @@ const port = "http://localhost:5000/question/";
 const The3Buttons = (props) => {
     const [id, setId] = useState(props.id);
     const [question, setQuestion] = useState();
-    const [firstRender, setFirstRender] = useState(false);
+    const [firstRender, setFirstRender] = useState(true);
     const [moreDetailes, setMoreDetailes] = useState(false);
     const [answers, setAnswers] = useState([]);
     const [show, setShow] = useState('Show');
@@ -42,13 +42,13 @@ const The3Buttons = (props) => {
             if (moreDetailes) {
                 setShow('Show');
                 setMoreDetailes(false);
-                console.log(`show: ${show}`)
             }
             else {
                 setShow('Hide');
                 setMoreDetailes(true);
-                console.log(`show: ${show}`)
             }
+        else
+            setFirstRender(true);
     }
 
     const renderAnswers = () => {

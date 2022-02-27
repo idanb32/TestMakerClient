@@ -14,7 +14,6 @@ const ClientFinishedTest = (props) => {
     const { state } = useLocation();
 
     useEffect(() => {
-        console.log(state)
         setQuiz(state.quiz);
         setScore(state.score);
         setUserId(state.userId)

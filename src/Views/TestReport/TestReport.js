@@ -52,18 +52,15 @@ const TestReport = (props) => {
         let name = location.state.testName;
         let from = null;
         let to = null;
-        console.log(location.state)
 
         if (location.state.hasOwnProperty("fromDatePass"))
             from = location.state.fromDatePass;
         if (location.state.hasOwnProperty("toDatePass"))
             to = location.state.toDatePass;
         let result = await TestService(name);
-        console.log(result);
         setNumOfQustion(result.questions.length)
         setTestName(result);
         let res = await SolvedService(result._id, from, to);
-        console.log(res);
         if (res)
             setNumOfSolved(res.length);
         else

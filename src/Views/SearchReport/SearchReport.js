@@ -26,7 +26,6 @@ const SearchReport = (props) => {
 
 
     const changed = (value) => {
-        console.log(value.target.value);
         setSelectedOption(value.target.value);
     }
 
@@ -54,15 +53,12 @@ const SearchReport = (props) => {
     }
 
     const valid = () => {
-        console.log(fromDate)
         let flag = true;
         if (testName == 'nothing found')
             flag = false
         if (allTimeState) {
-            console.log(fromDate)
         }
         else {
-            console.log(fromDate)
             if (fromDate == undefined && toDate == undefined)
                 flag = false
         }
@@ -71,7 +67,6 @@ const SearchReport = (props) => {
 
     function onChangeValue(event) {
         setAllTimeState(!allTimeState);
-        console.log(`changed!`)
     }
 
     const makeList = (list) => {

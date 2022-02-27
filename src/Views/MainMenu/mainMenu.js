@@ -22,7 +22,6 @@ const MainMenu = (props) => {
 
     
     const changed = (value) => {
-        console.log(value.target.value);
         setSelectedOption(value.target.value);
     }
 

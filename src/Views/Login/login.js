@@ -21,7 +21,6 @@ const LoginPage = (history) => {
   function submit() {
     if(userValue!="" && userPassword!="")
     LoginService(userValue, userPassword).then((result) => {
-      console.log(result);
       if (result.userRole == "Admin") {
         nav('/MainMenu' ,{state:{name:result.userName}});
       }

@@ -26,7 +26,6 @@ const MangeQuiz = (props) => {
     }
 
     const changed = (value) => {
-        console.log(value.target.value);
         setSelectedOption(value.target.value);
     }
 
@@ -104,7 +103,6 @@ const MangeQuiz = (props) => {
         else{
             showAll();
         }
-        console.log(subjectOption);
         setFirstRender(false);
     }, []);
 
