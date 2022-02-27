@@ -1,10 +1,11 @@
 import React from 'react';
-
+import getSubjectByName from '../EditQuiz/Services/getSubjectByName';
 import {useLocation,useNavigate  } from "react-router-dom";
 import {useState,useEffect} from 'react';
 import DropDownMenu from '../../GlobalComponents/DropDownMenu/DropDownMenu';
 import SolvedQuizService from './Services/solvedQuizService';
 import Button from '../../GlobalComponents/Button/Button';
+import retriveListOfTest from './Services/retriveListOfTest';
 
 const SearchReport = (props) =>{
     
@@ -12,6 +13,9 @@ const navigate = useNavigate();
 
 const location = useLocation();
 const [testList,setTestList] = useState([]);
+const [flagForList,setFlagForList] = useState(false)
+const [flag,setFlag] = useState(false);
+const [testName,setTestName] = useState('');
 const [selectedOption, setSelectedOption] = useState('');
 const [subject,setSubject] = useState(location.state.subject);
 const [userName,setUserName] = useState(location.state.userName);
@@ -39,11 +43,38 @@ const handleBack = () => {
 
 }
 const handleGenerateReport = () => {
-    return navigate('/TestReport',{state:{testName:selectedOption,fromDatePass:fromDate,toDatePass:toDate}});
+    console.log(valid()); 
+    if(false)
+    if(allTimeState)
+    {
+        valid()
+        return navigate('/TestReport',{state:{testName:selectedOption,fromDatePass:fromDate,toDatePass:toDate}});
+    }
+    else{
+
+    }
+    
 
 }
-const anyEvent=()=>{
-console.log('clicked');
+const valid=()=>{
+
+    let flag = true;
+    if(allTimeState)
+    {
+        console.log(testName);
+        if(testName == 'nothing found')
+        flag = false
+
+    }
+    else 
+    {
+        console.log(allTimeState);
+        if(fromDate!= undefined&&toDate!= undefined)
+        flag = false
+        
+
+    }
+    return flag;
 
 }
 function onChangeValue(event) {
@@ -51,12 +82,51 @@ function onChangeValue(event) {
     setAllTimeState(!allTimeState);
     console.log(allTimeState);
   }
+const makeList =(list)=>{
+    let arr = [];
+    if(list.length>0)
+    {
+        list.forEach((e)=>{
+            arr.push(e.testName)
+        })
+        return arr
 
+    }
+    else{
+        return list.testName;
+    }
+  
+}
 
 useEffect(async() =>{
-    let result = await SolvedQuizService();
-    setTestList(result);
-},[])
+    //let result = await SolvedQuizService();
+   let subId = await getSubjectByName(subject);
+   if(subId == undefined)
+   {
+    setTestName('nothing found')
+    setFlag(true);
+   }
+   else{
+    let list = await retriveListOfTest(subId._id);
+   if(list.length>1)
+    { 
+        let readyList =  makeList(list);
+        setTestList(readyList);
+        setFlagForList(true);
+    }
+   else if(list.length==1)
+    {
+        console.log(list[0].testName);
+        setTestName(`${list[0].testName}`);
+        setFlag(true);
+    }
+    else if(list.length == 0)
+    {
+        setTestName('nothing found')
+        setFlag(true);
+    }
+    }
+    },[setTestList])
 
     return(
             <div>
@@ -64,8 +134,8 @@ useEffect(async() =>{
                 <div className = "container">
                     <div className="selectTest">
                         <label>Select Test:</label>
-                        {dropDown()}
-                       
+                        {flagForList?dropDown():<label></label>}
+                        {flag?<label>{testName}</label>:<label></label>}
                     </div>
                     <div className="selectDate">
                         <label>Date Range</label>

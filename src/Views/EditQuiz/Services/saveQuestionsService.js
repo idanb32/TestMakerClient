@@ -8,7 +8,7 @@ const retriveQuiz =async (model)=>{
     
     try {
         let response = await axios.post(port,model);
-        console.log(response);
+       
         }
         catch (e)
         {

@@ -55,14 +55,14 @@ const MainMenu = (props) => {
                 <div className = "btn1">
                 
                 <Link className = "btn1" to='/QuestionMenu' state = {{userName : `${userName}`,subject:`${selectedOption}`}}>
-                Manage Questions >>
+                Manage Questions ...
                 </Link>
                 </div>
                 
                 <div className = "btn1">
                
                 <Link className = "btn" to='/QuizMenu' state = {{userName : `${userName}`,subject:`${selectedOption}`}}>
-                Manage Tests >>
+                Manage Tests ...
                 </Link>
                 </div>
               
@@ -71,7 +71,7 @@ const MainMenu = (props) => {
                 
 
                 <Link className = "btn" to='/SearchReport' state = {{userName :`${userName}`,subject:`${selectedOption}`}} >
-                    Reports >>
+                    Reports ...
                 </Link>
                 </div>
             </div>
