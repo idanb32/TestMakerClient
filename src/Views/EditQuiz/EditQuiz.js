@@ -18,6 +18,7 @@ import getSubjectByName from "./Services/getSubjectByName";
 import { set } from "draft-js/lib/EditorState";
 import axios from "axios";
 const port = "http://localhost:5000/question/";
+
 const EditQuiz = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const EditQuiz = (props) => {
   const [testType, setTestType] = useState(["predefined", "ordinal"]);
   const [totalNumOfQuestion, setTotalNumOfQuestion] = useState(0);
   const [questionListForGrid, setQuestionListForGrid] = useState([]);
-  const [loadedQuestionsNames, setLoadedQuestionsNames] = useState();
+  const [loadedQuestionsNames, setLoadedQuestionsNames] = useState([]);
   const [flagEmptyField, setFlagEmptyField] = useState(true);
   const [answers, setAnswers] = useState([]);
   const [arrayBiggerThan10, setArrayBiggerThan10] = useState(false);
@@ -70,10 +71,8 @@ const EditQuiz = (props) => {
 
   useEffect(async () => {
     setQuestionList([]);
-    console.log(`in use effect of edit`);
     if (location.state.quiz != null) {
       setIsUpdate(true);
-      console.log("got id" + location.state.quiz);
       let res = await retriveQuiz(`${location.state.quiz}`);
       let resList = await retriveQuestions();
       let subjName = await getSubjectService(res.subjectOfStudying);
@@ -91,21 +90,17 @@ const EditQuiz = (props) => {
       setHeaderText(res.msgOnPassSubject);
 
       if (res.questions == undefined) {
-        console.log("here");
         setNumberOfQAdded(0);
       }
     } else {
       if (location.state.subject == `undefined` && location.state.subject == "")
         navigate(`/`);
-      console.log("subject:" + location.state.subject);
       setInputFieldOfStudy(location.state.subject);
       let subjectId = await getSubjectByName(location.state.subject);
 
-      console.log(subjectId._id);
       setFieldOfStudyId(subjectId._id);
       setFlagEmptyField(false);
       setTestQuestionsAdded([]);
-      console.log("no id were given to the page - starting from zero");
       let resList = await retriveQuestions();
       setQuestionList(resList.data);
       orderTheQ(resList.data);
@@ -117,19 +112,16 @@ const EditQuiz = (props) => {
 
   const loadedQuestionsNamesHelper = async (qustionList) => {
     let arr = [];
-    for await (const question of qustionList) {
-      console.log("inside" + question);
+    for (const question of qustionList) {
       let res = await retriveSpecificQuestionService(question);
       arr.push(`${res.questionName},`);
     }
-    console.log(arr);
     setLoadedQuestionsNames(arr);
     return true;
   };
 
   const orderTheQ = (qustionList) => {
     setQuestionListForGrid([]);
-    console.log("inside order" + qustionList);
 
     let arr = [];
     let titles = {
@@ -140,7 +132,6 @@ const EditQuiz = (props) => {
     if (qustionList.length > 10) {
       setArrayBiggerThan10(true);
       indexRef.current = 0;
-      console.log("in first-" + `${indexRef.current}`);
       for (var i = 0; i < 10; i++) {
         let e = qustionList[i];
         let newQuestions = {
@@ -178,25 +169,22 @@ const EditQuiz = (props) => {
   };
 
   const addQuestionToList = async (id) => {
-    console.log("got to adds");
-    console.log(testQuestionsAdded);
-   
-      const match = testQuestionsAdded.find((element) => {
-        if (element.includes(id)) {
-          return true;
-        }
-      });
-      if (match) {
-        console.log("already have this Q!");
-      } else {
-        let arr = testQuestionsAdded;
-        arr.push(id);
-        await loadedQuestionsNamesHelper(arr);
-        setTestQuestionsAdded(arr);
-        setNumberOfQAdded(testQuestionsAdded.length);
-        console.log(arr);
+    const match = testQuestionsAdded.find((element) => {
+      if (element.includes(id)) {
+        return true;
       }
-     
+    });
+    if (match) {
+      console.log("already have this Q!");
+    }
+    else {
+      let arr = testQuestionsAdded;
+      arr.push(id);
+      await loadedQuestionsNamesHelper(arr);
+      setTestQuestionsAdded(arr);
+      setNumberOfQAdded(testQuestionsAdded.length);
+    }
+
   };
 
   const changedTestType = (value) => {
@@ -210,7 +198,6 @@ const EditQuiz = (props) => {
   };
 
   const changed = (value) => {
-    console.log(value.target.value);
     setSelectedOption(value.target.value);
   };
   const changeInput = (value) => {
@@ -236,7 +223,6 @@ const EditQuiz = (props) => {
   };
   const saveQuiz = () => {
     if (firstRender == false) {
-      console.log("in save");
       if (isUpdate) {
         let quiz = {
           id: testId,
@@ -254,7 +240,6 @@ const EditQuiz = (props) => {
         updateQuizService(quiz);
       } else {
         if (validtion()) {
-          console.log(fieldOfStudyId);
           let quiz = {
             language: "english",
             testName: testName,
@@ -321,18 +306,17 @@ const EditQuiz = (props) => {
     if (flag == false) {
       let windowRes = window.confirm(
         "Cant Add Test Cuz of The folowing:" +
-          `${questionListError}` +
-          `${onFailError}` +
-          "\n" +
-          `${onPassError}` +
-          "\n" +
-          `${gradeError}` +
-          "\n" +
-          `${nameError}` +
-          "\n"
+        `${questionListError}` +
+        `${onFailError}` +
+        "\n" +
+        `${onPassError}` +
+        "\n" +
+        `${gradeError}` +
+        "\n" +
+        `${nameError}` +
+        "\n"
       );
       if (windowRes) {
-        console.log("ok");
       }
     }
     return flag;
@@ -346,47 +330,38 @@ const EditQuiz = (props) => {
     setPassingGrade(value.target.value);
     setGradeError("");
   };
+
   const handelResetQuestionsInTest = async () => {
-  
-     console.log('got to handel reset');
-         let tmp =[];
-       // await loadedQuestionsNamesHelper(tmp)
-        setLoadedQuestionsNames(tmp);
-      setTestQuestionsAdded(tmp);
-       setNumberOfQAdded(0)
+    let tmp = [];
+    await setLoadedQuestionsNames(tmp);
+    await setTestQuestionsAdded(tmp);
+    setNumberOfQAdded(0)
   };
 
   const handelNextQuestions = () => {
-    console.log(`in handle next question ref: ${indexRef.current}`);
     if (firstRender == false) {
       if (arrayBiggerThan10) {
         indexRef.current = indexRef.current + 10;
         makeNewQuestionGrid("next");
       }
-      console.log(`finished handle next question ref: ${indexRef.current}`);
     }
   };
+
   const handelBackQuestions = () => {
     if (firstRender == false) {
       if (arrayBiggerThan10 == false) {
         return;
       }
       indexRef.current = indexRef.current - 10;
-
-      console.log(indexRef.current);
       makeNewQuestionGrid("back");
-      console.log("inside getBack");
     }
   };
   const makeNewQuestionGrid = (op) => {
     setQuestionListForGrid([]);
-    console.log("inside next questions");
-
     let arr = [];
     let titles = {
-      title: `Currently showing ${indexRef.current}-${
-        indexRef.current + 10
-      } questions`,
+      title: `Currently showing ${indexRef.current}-${indexRef.current + 10
+        } questions`,
       buttons: "",
     };
     arr.push(titles);
@@ -396,7 +371,6 @@ const EditQuiz = (props) => {
 
       //indexRef.current =range + 10;
       for (var i = range; i < range + 10; i++) {
-        console.log(i);
         if (qustionList[i] == null) {
           break;
         }
@@ -412,14 +386,11 @@ const EditQuiz = (props) => {
         };
         arr.push(newQuestions);
       }
-      console.log(indexRef.current);
       setQuestionListForGrid(arr);
     } else {
       var range = indexRef.current;
-      console.log(range);
       //indexRef.current =range - 10;
       for (var i = range; i < range + 10; i++) {
-        console.log(i);
         if (qustionList[i] == null) {
           break;
         }
@@ -435,7 +406,6 @@ const EditQuiz = (props) => {
         };
         arr.push(newQuestions);
       }
-      console.log(indexRef.current);
       setQuestionListForGrid(arr);
     }
   };
@@ -450,177 +420,176 @@ const EditQuiz = (props) => {
     setMsgOnFail(text.getCurrentContent().getPlainText());
   };
 
-  return (
-    <div>
-      <h1>Edit/Make New Test</h1>
-      {flagToSelectedQuestions ? (
-        <AllQuestions questionList={qustionList}></AllQuestions>
-      ) : (
-        <div></div>
-      )}
-      {/* {false?<AllQuestions questionList = {loadedQuestionsNames}></AllQuestions>:<div></div>} */}
-      <div className="generalTestDeatails">
-        <div className="fieldOfStudy">
-          <label>
-            field Of Study:
-            {flagEmptyField ? (
-              passedSubject
-            ) : (
-              <Input value={inputFieldOfStudy} onChange={handlefieldOfStudy} />
-            )}
-          </label>
-          {}
+  return (<div>
+    <h1>Edit/Make New Test</h1>
+    {flagToSelectedQuestions ? (
+      <AllQuestions questionList={qustionList}></AllQuestions>
+    ) : (
+      <div></div>
+    )}
+    {/* {false?<AllQuestions questionList = {loadedQuestionsNames}></AllQuestions>:<div></div>} */}
+    <div className="generalTestDeatails">
+      <div className="fieldOfStudy">
+        <label>
+          field Of Study:
+          {flagEmptyField ? (
+            passedSubject
+          ) : (
+            <Input value={inputFieldOfStudy} onChange={handlefieldOfStudy} />
+          )}
+        </label>
+        { }
 
-          {/* <Input value={testName} onChange={handleTestName} /> */}
-        </div>
-
-        <div className="field">
-          <label>Languege :</label>
-          <DropDownMenu
-            items={quizLeng}
-            handleClicked={changedLengu}
-          ></DropDownMenu>
-          <label className="errorDisplay">{languegeError}</label>
-        </div>
-
-        <div className="testType">
-          <label>test Type :</label>
-          <DropDownMenu
-            items={testType}
-            handleClicked={changedTestType}
-          ></DropDownMenu>
-        </div>
-
-        <div className="testName">
-          <label>test Name :</label>
-          {}
-          <Input value={testName} onChange={handleTestName} />
-          <label className="errorDisplay">{nameError}</label>
-        </div>
-
-        <div className="passingGrade">
-          <label>passing Grade :</label>
-          <Input value={inputPassGrade} onChange={handlePassGrade} />
-          <label className="errorDisplay">{gradeError}</label>
-        </div>
-
-        <div className="ShowAnswer">
-          <label>Show correct Answers</label>
-          <Input type="radio"></Input>
-        </div>
-
-        <div className="headerTextEditor">
-          <label>Header:</label>
-          <label className="errorDisplay">{headerError}</label>
-          <Editor_w_Validator
-            changeAnswer={handleHeaderTextChanged}
-            default={isUpdate ? `${headerText}` : `Header Text`}
-          />
-        </div>
-
-        <div className="passsingTestMssTextEditor">
-          <label>Messege to Show on Passing:</label>
-          <label className="errorDisplay">{onPassError}</label>
-          <Editor_w_Validator
-            changeAnswer={handleMssOnPassTextChanged}
-            default={isUpdate ? `${msgOnPass}` : `Messege on Passing the Test`}
-          />
-        </div>
-        <div className="failTestMssTextEditor">
-          <label>Messege to Show on Passing:</label>
-          <label className="errorDisplay">{onFailError}</label>
-          <Editor_w_Validator
-            changeAnswer={handleMssOnFailTextChanged}
-            default={isUpdate ? `${msgOnFail}` : "Messege on Failing the Test"}
-          />
-        </div>
+        {/* <Input value={testName} onChange={handleTestName} /> */}
       </div>
 
-      <div className="questionContainer">
-        <div className="topLine">
-          <h3>Questions</h3>
-        </div>
-
-        <div className="upperQuestion">
-          <div>Note:this test is set to be "{inputTestType}"</div>
-          <ul>
-            <li>All the questions u select will be in the test</li>
-            <li>all repdents each respondent to recive </li>
-          </ul>
-        </div>
-        <div className="selectQuestion">
-          <h4>select the questions that you want to includ in the test:</h4>
-          <div>
-            <label>Fillter by content</label>{" "}
-            <Input
-              placeholder="Search"
-              onChange={changeInput}
-              className="searchBar"
-              classNameInput="searchBar"
-            />
-            <Button text="Search" action={handleSearch} />
-            <DropDownMenu items={searchBy} handleClicked={changed} />
-          </div>
-
-          <MenuGrid items={questionListForGrid}></MenuGrid>
-          <div className="buttonLine">
-            Showing {totalNumOfQuestion} of {totalNumOfQuestion}
-            {arrayBiggerThan10 ? (
-              <Button
-                text="Back"
-                width="65px"
-                height="20px"
-                action={handelBackQuestions}
-              ></Button>
-            ) : (
-              ""
-            )}
-            <Button
-              text="Next"
-              width="65px"
-              height="20px"
-              action={handelNextQuestions}
-            ></Button>
-            <Button
-              text="Reset Search"
-              width="200px"
-              height="20px"
-              action={handelShowOnlySelected}
-            ></Button>
-            <Button
-              text="Show All Questions"
-              width="200px"
-              height="20px"
-              action={handelShowAllQuestions}
-            ></Button>
-            <Button
-              text="Reset Questions in Test"
-              width="200px"
-              height="20px"
-              action={handelResetQuestionsInTest}
-            ></Button>
-          </div>
-          <div>The test will includ {numberOfQAdded} questions in total </div>
-          <div className="inTestNames">
-            questions that in the test - {loadedQuestionsNames}
-            <label className="errorDisplay">{questionListError}</label>
-          </div>
-        </div>
+      <div className="field">
+        <label>Languege :</label>
+        <DropDownMenu
+          items={quizLeng}
+          handleClicked={changedLengu}
+        ></DropDownMenu>
+        <label className="errorDisplay">{languegeError}</label>
       </div>
 
-      <div className="actionButton">
-        <Link to={"/QuizMenu"} state={{ subject: passedSubject }}>
-          <Button text="Back" width="65px" height="20px" />
-        </Link>
+      <div className="testType">
+        <label>test Type :</label>
+        <DropDownMenu
+          items={testType}
+          handleClicked={changedTestType}
+        ></DropDownMenu>
+      </div>
 
-        <Button
-          text="Save"
-          width="65px"
-          height="20px"
-          action={saveQuiz}
-        ></Button>
+      <div className="testName">
+        <label>test Name :</label>
+        { }
+        <Input value={testName} onChange={handleTestName} />
+        <label className="errorDisplay">{nameError}</label>
+      </div>
+
+      <div className="passingGrade">
+        <label>passing Grade :</label>
+        <Input value={inputPassGrade} onChange={handlePassGrade} />
+        <label className="errorDisplay">{gradeError}</label>
+      </div>
+
+      <div className="ShowAnswer">
+        <label>Show correct Answers</label>
+        <Input type="radio"></Input>
+      </div>
+
+      <div className="headerTextEditor">
+        <label>Header:</label>
+        <label className="errorDisplay">{headerError}</label>
+        <Editor_w_Validator
+          changeAnswer={handleHeaderTextChanged}
+          default={isUpdate ? `${headerText}` : `Header Text`}
+        />
+      </div>
+
+      <div className="passsingTestMssTextEditor">
+        <label>Messege to Show on Passing:</label>
+        <label className="errorDisplay">{onPassError}</label>
+        <Editor_w_Validator
+          changeAnswer={handleMssOnPassTextChanged}
+          default={isUpdate ? `${msgOnPass}` : `Messege on Passing the Test`}
+        />
+      </div>
+      <div className="failTestMssTextEditor">
+        <label>Messege to Show on Passing:</label>
+        <label className="errorDisplay">{onFailError}</label>
+        <Editor_w_Validator
+          changeAnswer={handleMssOnFailTextChanged}
+          default={isUpdate ? `${msgOnFail}` : "Messege on Failing the Test"}
+        />
       </div>
     </div>
+
+    <div className="questionContainer">
+      <div className="topLine">
+        <h3>Questions</h3>
+      </div>
+
+      <div className="upperQuestion">
+        <div>Note:this test is set to be "{inputTestType}"</div>
+        <ul>
+          <li>All the questions u select will be in the test</li>
+          <li>all repdents each respondent to recive </li>
+        </ul>
+      </div>
+      <div className="selectQuestion">
+        <h4>select the questions that you want to includ in the test:</h4>
+        <div>
+          <label>Fillter by content</label>{" "}
+          <Input
+            placeholder="Search"
+            onChange={changeInput}
+            className="searchBar"
+            classNameInput="searchBar"
+          />
+          <Button text="Search" action={handleSearch} />
+          <DropDownMenu items={searchBy} handleClicked={changed} />
+        </div>
+
+        <MenuGrid items={questionListForGrid}></MenuGrid>
+        <div className="buttonLine">
+          Showing {totalNumOfQuestion} of {totalNumOfQuestion}
+          {arrayBiggerThan10 ? (
+            <Button
+              text="Back"
+              width="65px"
+              height="20px"
+              action={handelBackQuestions}
+            ></Button>
+          ) : (
+            ""
+          )}
+          <Button
+            text="Next"
+            width="65px"
+            height="20px"
+            action={handelNextQuestions}
+          ></Button>
+          <Button
+            text="Reset Search"
+            width="200px"
+            height="20px"
+            action={handelShowOnlySelected}
+          ></Button>
+          <Button
+            text="Show All Questions"
+            width="200px"
+            height="20px"
+            action={handelShowAllQuestions}
+          ></Button>
+          <Button
+            text="Reset Questions in Test"
+            width="200px"
+            height="20px"
+            action={handelResetQuestionsInTest}
+          ></Button>
+        </div>
+        <div>The test will includ {numberOfQAdded} questions in total </div>
+        <div className="inTestNames">
+          questions that in the test - {loadedQuestionsNames}
+          <label className="errorDisplay">{questionListError}</label>
+        </div>
+      </div>
+    </div>
+
+    <div className="actionButton">
+      <Link to={"/QuizMenu"} state={{ subject: passedSubject }}>
+        <Button text="Back" width="65px" height="20px" />
+      </Link>
+
+      <Button
+        text="Save"
+        width="65px"
+        height="20px"
+        action={saveQuiz}
+      ></Button>
+    </div>
+  </div>
   );
 };
 

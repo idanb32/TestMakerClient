@@ -5,7 +5,6 @@ const port = "http://localhost:5000/question/Get";
 
 const retriveSpecificQuestionService =async (id)=>{
    
-   console.log(id);
     try {
         let body = {"id":`${id}`}
         let response = await axios.post(port,body);
