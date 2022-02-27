@@ -385,7 +385,7 @@ const EditQuestion = (props) => {
                 </div>
             </div>
             <div className="editQuizButtons">
-                <Link to={"/QuestionMenu"}>
+                <Link to={"/QuestionMenu"} state={{subject:subject}}>
                     <Button text="Back" />
                 </Link>
                 <Button text="Save" action={saveClicked} />

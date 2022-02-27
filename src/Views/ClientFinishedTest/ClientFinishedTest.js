@@ -10,12 +10,14 @@ import './ClientFinishedTest.css'
 const ClientFinishedTest = (props) => {
     const [quiz, setQuiz] = useState();
     const [score, setScore] = useState();
+    const [userId, setUserId] = useState();
     const { state } = useLocation();
 
     useEffect(() => {
         console.log(state)
         setQuiz(state.quiz);
         setScore(state.score);
+        setUserId(state.userId)
     }, [])
 
     const renderMsges = () => {
@@ -38,7 +40,7 @@ const ClientFinishedTest = (props) => {
 
     return (<div className="finsishedTest">
         {renderMsges()}
-        <Link to='/ClientMenu' >
+        <Link to='/ClientMenu' state={{userId:userId}} >
             <Button text="Move to menu" />
         </Link>
     </div>)

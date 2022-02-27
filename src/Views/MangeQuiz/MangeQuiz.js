@@ -17,7 +17,7 @@ const MangeQuiz = (props) => {
     const [inputText, setInputText] = useState("");
     const [searchBy, setSearchBy] = useState(["Name", "Language"]);
     const [quizes, setQuizes] = useState();
-    const [selectedOption, setSelectedOption] = useState("Tags");
+    const [selectedOption, setSelectedOption] = useState("Name");
     const [subjectOption,setSubjectOption] = useState(location.state.subject);
     const [firstRender,setFirstRender] = useState(true)
 
@@ -86,10 +86,25 @@ const MangeQuiz = (props) => {
                 console.log(errorList);
             });
     }
+    const showAllSub = (subject) => {
+        if (subject)
+            axios.post(port + "getallSubject", { subject: subject }).then((questionsList) => {
+                formatModelClosed(questionsList.data);
+                setQuizes(questionsList.data);
+            })
+                .catch((errorList) => {
+                    console.log(errorList);
+                });
+    }
 
     useEffect(() => {
+        if(location.state.subject){
+            showAllSub(location.state.subject);
+        }
+        else{
+            showAll();
+        }
         console.log(subjectOption);
-        showAll();
         setFirstRender(false);
     }, []);
 

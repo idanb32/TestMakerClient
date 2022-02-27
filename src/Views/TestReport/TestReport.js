@@ -18,7 +18,7 @@ const TestReport = (props) => {
     const [formatedQuestion, setFormatedQuestion] = useState([])
     const [numOfSolved, setNumOfSolved] = useState(0);
     const [numOfQuestion, setNumOfQustion] = useState(0);
-    
+
 
     const handleShowQ = () => {
 
@@ -38,7 +38,7 @@ const TestReport = (props) => {
                     submittedDate: <label>{user.dateTaken}</label>,
                     numberOfQuestion: <label>{user.userAnswer.length}</label>,
                     grade: <label>{user.score}</label>,
-                    moveToME:<Link to={'/CurrentReport'} state= {{state:{quiz:testName, userName: user.userName,solvedId : user._id ,testName:testName.testName }}}> <Button text="Move to me"/> </Link>
+                    moveToME: <Link to={'/CurrentReport'} state={{ state: { quiz: testName, userName: user.userName, solvedId: user._id, testName: testName.testName } }}> <Button text="Move to me" /> </Link>
                 }
                 newFormatedQuestion.push(newAnwer);
             }
@@ -49,20 +49,25 @@ const TestReport = (props) => {
     // need to change to get from state aka un comment the useEffect veriables.
 
     useEffect(async () => {
-        // let name = location.state.testName;
-        let date = new Date();
-        let from = new Date(date.getFullYear(), date.getMonth(), 1);
-        let to = new Date(Date.now());
+        let name = location.state.testName;
+        let from = null;
+        let to = null;
+        console.log(location.state)
 
-        // if (location.state.hasOwnProperty("fromDatePass"))
-        //     from = location.state.fromDatePass;
-        // if (location.state.hasOwnProperty("toDatePass"))
-        //     to = location.state.toDatePass;
-        let result = await TestService(`tomerTestWithALllot`);
+        if (location.state.hasOwnProperty("fromDatePass"))
+            from = location.state.fromDatePass;
+        if (location.state.hasOwnProperty("toDatePass"))
+            to = location.state.toDatePass;
+        let result = await TestService(name);
+        console.log(result);
         setNumOfQustion(result.questions.length)
         setTestName(result);
         let res = await SolvedService(result._id, from, to);
-        setNumOfSolved(res.length);
+        console.log(res);
+        if (res)
+            setNumOfSolved(res.length);
+        else
+            setNumOfSolved(0);
         setListSolved(res);
     }, [])
 

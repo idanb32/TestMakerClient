@@ -5,10 +5,8 @@ function Button(props) {
 
     const [buttonColor, setButtonColor] = useState(props.color);
     const [backGroundcolor, setbackGroundcolor] = useState(props.backGroundcolor);
-    const [actionContent, setActionContent] = useState(props.action);
     const [widthSize, setwidthSize] = useState(props.width);
     const [heightSize, setheightSize] = useState(props.height);
-
     const styles = {
 
         "backgroundColor": `${backGroundcolor}`,
@@ -17,7 +15,7 @@ function Button(props) {
         "textColor": `${buttonColor}`
 
     }
-
+ 
 
     return (
         <button className='MainButton' style={styles} onClick={props.action}>

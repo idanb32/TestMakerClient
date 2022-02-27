@@ -37,6 +37,7 @@ const CurrentReport = () => {
 
     const getAnswerForQuestion = (id) => {
         let tmp = userAnswer.map((item) => {
+            if(item==null || item === 'undefiend') return
             if (item.question == id) {
                 let newItem = <div className="answer">{item.answer + " "} <Icon className={item.isCorrect ? "fa-solid fa-circle-check" : "fa-solid fa-circle-xmark"}
                     color={item.isCorrect ? "green" : "red"} /> </div>
@@ -49,8 +50,11 @@ const CurrentReport = () => {
 
     useEffect(async () => {
         if (!state.state) return;
+        console.log(state.state);
         let solvedQuiz = await axios.post(port + "get", { id: state.state.solvedId });
+        console.log(solvedQuiz.data);
         let tmp = await axios.post(Quizport + "GetQuizQuestion", { id: state.state.quiz._id });
+        console.log(tmp.data);
         setUserAnswers(solvedQuiz.data.userAnswer);
         setUserName(state.state.userName);
         setQuiz(tmp.data);

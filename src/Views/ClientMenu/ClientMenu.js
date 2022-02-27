@@ -18,7 +18,7 @@ const ClientMenu = (props) => {
     const [inputText, setInputText] = useState("");
     const [searchBy, setSearchBy] = useState(["Name", "Language"]);
     const [quizes, setQuizes] = useState();
-    const [selectedOption, setSelectedOption] = useState("Tags");
+    const [selectedOption, setSelectedOption] = useState("Name");
     const location = useLocation();
     const [userId,setUserId]=useState(location.state.userId);
     const nav = useNavigate();

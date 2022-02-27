@@ -6,8 +6,9 @@ const AllQuestions =(props)=>{
     const [questionList,setQuestionList] = useState([]);
 
     useEffect(()=>{
+        console.log(`in use effect of all question`)
         setQuestionList(props.questionList)
-    })
+    },[])
 
     const makeQuestionTabel = ()=>{
         console.log(questionList);

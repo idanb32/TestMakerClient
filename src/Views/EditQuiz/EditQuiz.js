@@ -68,7 +68,7 @@ const EditQuiz = (props) =>
 
     useEffect(async ()=>{
         setQuestionList([])
-        
+        console.log(`in use effect of edit`)
         if(location.state.quiz !=null){
             setIsUpdate(true);
             console.log('got id'+location.state.quiz);
@@ -112,7 +112,7 @@ const EditQuiz = (props) =>
         
         setFirstRender(false)
 
-    },[retriveQuiz,setIsUpdate])
+    },[])
     
     const loadedQuestionsNamesHelper =async (qustionList)=>{
         let arr= [];
@@ -140,7 +140,7 @@ const EditQuiz = (props) =>
         if(qustionList.length >10)
         {
             setArrayBiggerThan10(true);
-            indexRef.current = 10;
+            indexRef.current = 0;
             console.log('in first-' +`${indexRef.current}`);
             for(var i=0;i<10;i++)
             {
@@ -148,7 +148,6 @@ const EditQuiz = (props) =>
                 let newQuestions = {
                     adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
                     questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-                    buttons: <Button text="Show"  ></Button>
                    }
                 arr.push(newQuestions);
             }
@@ -159,7 +158,6 @@ const EditQuiz = (props) =>
                 let newQuestions = {
                   adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
                   questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-                  buttons: <Button text="Show"  ></Button>
                  }
                  arr.push(newQuestions)
               })
@@ -348,6 +346,7 @@ const EditQuiz = (props) =>
     }
     
     const handelNextQuestions=()=>{
+        console.log(`in handle next question ref: ${indexRef.current}`)
        if(firstRender == false)
        {
         if(arrayBiggerThan10 )
@@ -356,6 +355,7 @@ const EditQuiz = (props) =>
             makeNewQuestionGrid('next')
             
         }
+        console.log(`finished handle next question ref: ${indexRef.current}`)
     }
 
     }
@@ -400,7 +400,6 @@ const EditQuiz = (props) =>
             let newQuestions = {
                 adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
                 questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-                buttons: <Button text="Show"  ></Button>
                }
             arr.push(newQuestions);
         }
@@ -423,7 +422,6 @@ const EditQuiz = (props) =>
             let newQuestions = {
                 adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
                 questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-                buttons: <Button text="Show"  ></Button>
                }
             arr.push(newQuestions);
         }
@@ -450,8 +448,8 @@ const EditQuiz = (props) =>
         <div>
 
             <h1>Edit/Make New Test</h1>
-            {!flagToSelectedQuestions?<AllQuestions questionList = {qustionList}></AllQuestions>:<div></div>}
-            {false?<AllQuestions questionList = {loadedQuestionsNames}></AllQuestions>:<div></div>}
+            {flagToSelectedQuestions?<AllQuestions questionList = {qustionList}></AllQuestions>:<div></div>}
+            {/* {false?<AllQuestions questionList = {loadedQuestionsNames}></AllQuestions>:<div></div>} */}
             <div className="generalTestDeatails">
 
             <div className="fieldOfStudy">
@@ -552,12 +550,11 @@ const EditQuiz = (props) =>
             </div>
 
             <div className="actionButton">
-                <Link to={"/QuestionMenu"}>
+                <Link to={"/QuizMenu"} state={{subject: passedSubject }}>
                     <Button text='Back' width='65px' height = '20px' />
                 </Link>
 
 
-                <Button text='Show' width='65px' height = '20px' action={handelShowQuiz}></Button>
                 <Button text='Save' width='65px' height = '20px' action={saveQuiz}></Button>
             </div>
 
