@@ -1,6 +1,6 @@
 import Editor_w_Validator from "../EditQuestion/Components/Editor_W_Validation/Editor_W_Validator";
 import DropDownMenu from "../../GlobalComponents/DropDownMenu/DropDownMenu";
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "../../GlobalComponents/Button/Button";
 import Input from "../../GlobalComponents/Input/Input";
 import { Link, useLocation } from "react-router-dom";
@@ -16,66 +16,65 @@ import retriveSpecificQuestionService from "./Services/retriveSpecificQuestionSe
 import AllQuestions from "./Componnets/allQuestions";
 import getSubjectByName from "./Services/getSubjectByName";
 import { set } from "draft-js/lib/EditorState";
-const EditQuiz = (props) => 
-{
+const EditQuiz = (props) => {
     const location = useLocation();
-    const [passedSubject,setPassedSubject] = useState()
-    const [qustionList,setQuestionList] = useState([]);
-    const [quizLeng,setQuizLen] = useState(["","english","hebrew"]);
-    const [testType,setTestType] = useState(["predefined","ordinal"]);
-    const [totalNumOfQuestion,setTotalNumOfQuestion] = useState(0);
-    const [questionListForGrid,setQuestionListForGrid] = useState([]);
-    const [loadedQuestionsNames,setLoadedQuestionsNames] = useState()
-    const [flagEmptyField,setFlagEmptyField] = useState(true)
+    const [passedSubject, setPassedSubject] = useState()
+    const [qustionList, setQuestionList] = useState([]);
+    const [quizLeng, setQuizLen] = useState(["", "english", "hebrew"]);
+    const [testType, setTestType] = useState(["predefined", "ordinal"]);
+    const [totalNumOfQuestion, setTotalNumOfQuestion] = useState(0);
+    const [questionListForGrid, setQuestionListForGrid] = useState([]);
+    const [loadedQuestionsNames, setLoadedQuestionsNames] = useState()
+    const [flagEmptyField, setFlagEmptyField] = useState(true)
     const [answers, setAnswers] = useState([]);
-    const [arrayBiggerThan10,setArrayBiggerThan10]= useState(false);
-    const [indexOFBiggerThan10,setIndexOFBiggerThan10]=useState(0);
+    const [arrayBiggerThan10, setArrayBiggerThan10] = useState(false);
+    const [indexOFBiggerThan10, setIndexOFBiggerThan10] = useState(0);
     const indexRef = useRef(0);
 
     //validation for answers , tags , horzintal and subject
-     const [nameError, setNameError] = useState("");
-     const [languegeError, setLanguegeError] = useState("");
-     const [gradeError, setGradeError] = useState("");
-     const [questionListError, setQuestionListError] = useState("");
-     const [headerError, setHeaderError] = useState("");
-     const [onPassError, setOnPassError] = useState("");
-     const [onFailError, setOnFailError] = useState("");
-     const [firstRender,setFirstRender] = useState(true)
+    const [nameError, setNameError] = useState("");
+    const [languegeError, setLanguegeError] = useState("");
+    const [gradeError, setGradeError] = useState("");
+    const [questionListError, setQuestionListError] = useState("");
+    const [headerError, setHeaderError] = useState("");
+    const [onPassError, setOnPassError] = useState("");
+    const [onFailError, setOnFailError] = useState("");
+    const [firstRender, setFirstRender] = useState(true)
 
-    
-     //Keep track if we are updating a quiz or adding a new one.
+
+    //Keep track if we are updating a quiz or adding a new one.
     const [isUpdate, setIsUpdate] = useState(false);
-    const [flagToAllQuestions,setFlagToAllQuestions] = useState();
-    const[flagToSelectedQuestions,setFlagToSelectedQuestions] = useState(false)
+    const [flagToAllQuestions, setFlagToAllQuestions] = useState();
+    const [flagToSelectedQuestions, setFlagToSelectedQuestions] = useState(false)
     //Keep track of the question id
-    const [testId,setTestId] = useState();
-    const [subjectId,setSubjectId] = useState()
-    const [modelOnLoad,setModelOnLoad] = useState({});
+    const [testId, setTestId] = useState();
+    const [subjectId, setSubjectId] = useState()
+    const [modelOnLoad, setModelOnLoad] = useState({});
     //quiz model states
-    const [numberOfQAdded,setNumberOfQAdded] = useState(0);
-    const [inputPassGrade,setPassingGrade]= useState('');
-    const [testName,setTestName] = useState('');
-    const [testQuestionsAdded,setTestQuestionsAdded] = useState([])
-    const [headerText,setHeaderText] = useState();
-    const [msgOnPass,setMsgOnPass] = useState();
-    const [msgOnFail,setMsgOnFail] = useState();
-    const [inputLangu,setInputLan] = useState();
-    const [inputFieldOfStudy,setInputFieldOfStudy] = useState();
-    const [fieldOfStudyId,setFieldOfStudyId] = useState();
-    const [inputTestType,setInputTestType] = useState("");
-    
-    
+    const [numberOfQAdded, setNumberOfQAdded] = useState(0);
+    const [inputPassGrade, setPassingGrade] = useState('');
+    const [testName, setTestName] = useState('');
+    const [testQuestionsAdded, setTestQuestionsAdded] = useState([])
+    const [headerText, setHeaderText] = useState();
+    const [msgOnPass, setMsgOnPass] = useState();
+    const [msgOnFail, setMsgOnFail] = useState();
+    const [inputLangu, setInputLan] = useState();
+    const [inputFieldOfStudy, setInputFieldOfStudy] = useState();
+    const [fieldOfStudyId, setFieldOfStudyId] = useState();
+    const [inputTestType, setInputTestType] = useState("");
 
-    useEffect(async ()=>{
+
+
+    useEffect(async () => {
         setQuestionList([])
         console.log(`in use effect of edit`)
-        if(location.state.quiz !=null){
+        if (location.state.quiz != null) {
             setIsUpdate(true);
-            console.log('got id'+location.state.quiz);
+            console.log('got id' + location.state.quiz);
             let res = await retriveQuiz(`${location.state.quiz}`);
             let resList = await retriveQuestions()
             let subjName = await getSubjectService(res.subjectOfStudying);
-            let result =  await loadedQuestionsNamesHelper(res.questions)
+            let result = await loadedQuestionsNamesHelper(res.questions)
             setTestId(res._id);
             setQuestionList(resList.data)
             orderTheQ(resList.data);
@@ -87,16 +86,15 @@ const EditQuiz = (props) =>
             setSubjectId(subjName.data._id)
             setMsgOnFail(res.msgOnFailBody)
             setHeaderText(res.msgOnPassSubject)
-            
 
-            if(res.questions == undefined)
-            {
+
+            if (res.questions == undefined) {
                 console.log('here');
-            setNumberOfQAdded(0)
+                setNumberOfQAdded(0)
             }
         }
-        else{
-            console.log( "subject:"+location.state.subject);
+        else {
+            console.log("subject:" + location.state.subject);
             setInputFieldOfStudy(location.state.subject);
             let subjectId = await getSubjectByName(location.state.subject);
             console.log(subjectId._id);
@@ -109,15 +107,15 @@ const EditQuiz = (props) =>
             orderTheQ(resList.data);
             setTotalNumOfQuestion(resList.data.length)
         }
-        
+
         setFirstRender(false)
 
-    },[])
-    
-    const loadedQuestionsNamesHelper =async (qustionList)=>{
-        let arr= [];
-        for await (const question of qustionList){
-            console.log('inside'+ question);
+    }, [])
+
+    const loadedQuestionsNamesHelper = async (qustionList) => {
+        let arr = [];
+        for await (const question of qustionList) {
+            console.log('inside' + question);
             let res = await retriveSpecificQuestionService(question)
             arr.push(`${res.questionName},`)
         }
@@ -127,338 +125,316 @@ const EditQuiz = (props) =>
     }
 
 
-    const orderTheQ = (qustionList)=>{
+    const orderTheQ = (qustionList) => {
         setQuestionListForGrid([])
         console.log("inside order");
-      
+
         let arr = []
         let titles = {
             title: `Currently showing ${qustionList.length} questions`,
-            buttons : ""
+            buttons: ""
         }
         arr.push(titles);
-        if(qustionList.length >10)
-        {
+        if (qustionList.length > 10) {
             setArrayBiggerThan10(true);
             indexRef.current = 0;
-            console.log('in first-' +`${indexRef.current}`);
-            for(var i=0;i<10;i++)
-            {
+            console.log('in first-' + `${indexRef.current}`);
+            for (var i = 0; i < 10; i++) {
                 let e = qustionList[i];
                 let newQuestions = {
-                    adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
-                    questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-                   }
+                    adding: <button onClick={() => (addQuestionToList(e._id))}>Add</button>,
+                    questionNameAndTag: <QuestionNameAndTags Tags={e.questionTags} questionName={e.questionName} />,
+                }
                 arr.push(newQuestions);
             }
         }
-        else{
-            qustionList.forEach((e)=>{
-            
+        else {
+            qustionList.forEach((e) => {
+
                 let newQuestions = {
-                  adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
-                  questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-                 }
-                 arr.push(newQuestions)
-              })
-              
+                    adding: <button onClick={() => (addQuestionToList(e._id))}>Add</button>,
+                    questionNameAndTag: <QuestionNameAndTags Tags={e.questionTags} questionName={e.questionName} />,
+                }
+                arr.push(newQuestions)
+            })
+
         }
         setQuestionListForGrid(arr);
-        
+
     }
 
-    const setItemsOnLoadWithID =(model)=>{
+    const setItemsOnLoadWithID = (model) => {
         setModelOnLoad(model.data)
         setTotalNumOfQuestion();
         orderTheQ();
     }
-    
-    
-    const addQuestionToList =async (id)=>{
+
+
+    const addQuestionToList = async (id) => {
         console.log(testQuestionsAdded);
         const match = testQuestionsAdded.find(element => {
             if (element.includes(id)) {
-              return false;
+                return false;
             }
-          });
-        if(match){
+        });
+        if (match) {
             console.log('already have this Q!');
         }
-        else{
-        console.log('clicked question  ' + id);
-        let arr = testQuestionsAdded;
-        arr.push(id)
-        await loadedQuestionsNamesHelper(arr)
-        setTestQuestionsAdded(arr)
-        setNumberOfQAdded(testQuestionsAdded.length);
-       }
+        else {
+            console.log('clicked question  ' + id);
+            let arr = testQuestionsAdded;
+            arr.push(id)
+            await loadedQuestionsNamesHelper(arr)
+            setTestQuestionsAdded(arr)
+            setNumberOfQAdded(testQuestionsAdded.length);
+        }
     }
 
     const changedTestType = (value) => {
         setInputTestType(value.target.value);
     }
-    
+
     const changedLengu = (value) => {
         setQuizLen(value.target.value);
         setInputLan(value.target.value);
         setLanguegeError("")
 
     }
-    
 
-    const handelShowQuiz=()=>{
-      
+
+    const handelShowQuiz = () => {
+
     }
-    const handelShowOnlySelected=()=>{
+    const handelShowOnlySelected = () => {
         //setFlagToSelectedQuestions(!flagToSelectedQuestions)
     }
-    const handelShowAllQuestions=()=>{
+    const handelShowAllQuestions = () => {
         setFlagToSelectedQuestions(!flagToSelectedQuestions)
         setFlagToAllQuestions(false)
-      
+
     }
-    const handlefieldOfStudy=(value)=>{
+    const handlefieldOfStudy = (value) => {
         setInputFieldOfStudy(value.target.value);
-        
-    }
-    const saveQuiz = ()=>{
-        if(firstRender== false)
-        {
-        console.log('in save');
-       if(isUpdate)
-       {
-        let quiz={
-            id:testId,
-            language :quizLeng,
-            testName : testName,
-            passingGrade :inputPassGrade,
-            msgOnPassSubject : headerText,
-            msgOnPassBody : msgOnPass,
-            msgOnFailSubject : msgOnFail,
-            msgOnFailBody : msgOnFail,
-            questions : testQuestionsAdded,
-            date :Date.now(),
-            subjectOfStudying : subjectId
-        }
-        updateQuizService(quiz);
 
-       }
-       else
-       {
-        if(validtion()) 
-       {
-           console.log(fieldOfStudyId);
-       let quiz={
-            language :"english",
-            testName : testName,
-            passingGrade :inputPassGrade,
-            msgOnPassSubject : msgOnPass,
-            msgOnPassBody : msgOnPass,
-            msgOnFailSubject : msgOnFail,
-            msgOnFailBody : msgOnFail,
-            questions : testQuestionsAdded,
-            date :Date.now(),
-            subjectOfStudying : fieldOfStudyId
-        }
-        saveQuestionsService(quiz)
-       }
-     }
     }
+    const saveQuiz = () => {
+        if (firstRender == false) {
+            console.log('in save');
+            if (isUpdate) {
+                let quiz = {
+                    id: testId,
+                    language: quizLeng,
+                    testName: testName,
+                    passingGrade: inputPassGrade,
+                    msgOnPassSubject: headerText,
+                    msgOnPassBody: msgOnPass,
+                    msgOnFailSubject: msgOnFail,
+                    msgOnFailBody: msgOnFail,
+                    questions: testQuestionsAdded,
+                    date: Date.now(),
+                    subjectOfStudying: subjectId
+                }
+                updateQuizService(quiz);
+
+            }
+            else {
+                if (validtion()) {
+                    console.log(fieldOfStudyId);
+                    let quiz = {
+                        language: "english",
+                        testName: testName,
+                        passingGrade: inputPassGrade,
+                        msgOnPassSubject: msgOnPass,
+                        msgOnPassBody: msgOnPass,
+                        msgOnFailSubject: msgOnFail,
+                        msgOnFailBody: msgOnFail,
+                        questions: testQuestionsAdded,
+                        date: Date.now(),
+                        subjectOfStudying: fieldOfStudyId
+                    }
+                    saveQuestionsService(quiz)
+                }
+            }
+        }
     }
 
-    const validtion = ()=>{
+    const validtion = () => {
         let flag = true
-        if(testName === "")
-        {
+        if (testName === "") {
             flag = false;
             setNameError("Name is Empty")
         }
-        else{
+        else {
             setNameError("")
         }
-        if(inputLangu == "")
-        {
+        if (inputLangu == "") {
             flag = false;
             setLanguegeError("Languege is Empty")
         }
-        else{
+        else {
             setLanguegeError("")
         }
-        if(inputPassGrade == "")
-        {
+        if (inputPassGrade == "") {
             flag = false;
             setGradeError("Grade is Empty")
         }
-        else{
+        else {
             setGradeError("")
         }
-        if(headerText == "")
-        {
+        if (headerText == "") {
             flag = false;
             setHeaderError("Missing A header To The Test")
         }
-        else{
+        else {
             setHeaderError("")
         }
-        if(msgOnPass == "")
-        {
+        if (msgOnPass == "") {
             flag = false;
             setOnPassError("Missing on Pass")
         }
-        else{
+        else {
             setOnPassError("")
         }
-        if(msgOnFail == "")
-        {
+        if (msgOnFail == "") {
             flag = false;
             setOnFailError("Missing on Fail Text")
         }
-        else{
+        else {
             setOnFailError("")
         }
-        if(numberOfQAdded <= 0)
-        {
+        if (numberOfQAdded <= 0) {
             flag = false;
             setQuestionListError("No Questions In the Quiz")
         }
-        else{
+        else {
             setQuestionListError("")
         }
 
-        if(flag == false)
-        {
-            let windowRes = window.confirm("Cant Add Test Cuz of The folowing:" + `${questionListError}`+ `${onFailError}`+"\n"+ `${onPassError}`+"\n"
-            + `${gradeError}`+"\n"+ `${nameError}`+"\n");
-            if(windowRes){
+        if (flag == false) {
+            let windowRes = window.confirm("Cant Add Test Cuz of The folowing:" + `${questionListError}` + `${onFailError}` + "\n" + `${onPassError}` + "\n"
+                + `${gradeError}` + "\n" + `${nameError}` + "\n");
+            if (windowRes) {
                 console.log('ok');
             }
         }
         return flag;
     }
-    const handleTestName=(value)=>{
+    const handleTestName = (value) => {
         setTestName(value.target.value);
         setNameError("");
     }
 
-    const handlePassGrade=(value)=>{
+    const handlePassGrade = (value) => {
         setPassingGrade(value.target.value);
         setGradeError("")
     }
-    
-    const handelNextQuestions=()=>{
+
+    const handelNextQuestions = () => {
         console.log(`in handle next question ref: ${indexRef.current}`)
-       if(firstRender == false)
-       {
-        if(arrayBiggerThan10 )
-        {
-            indexRef.current = indexRef.current+10
-            makeNewQuestionGrid('next')
-            
+        if (firstRender == false) {
+            if (arrayBiggerThan10) {
+                indexRef.current = indexRef.current + 10
+                makeNewQuestionGrid('next')
+
+            }
+            console.log(`finished handle next question ref: ${indexRef.current}`)
         }
-        console.log(`finished handle next question ref: ${indexRef.current}`)
-    }
 
     }
-    const handelBackQuestions = ()=>{
-        if(firstRender==false)
-        {
-        if(arrayBiggerThan10==false)
-        {
-            return
-        }
-        indexRef.current = indexRef.current-10;
-        
-        console.log(indexRef.current);
-        makeNewQuestionGrid('back');
-        console.log('inside getBack'); 
+    const handelBackQuestions = () => {
+        if (firstRender == false) {
+            if (arrayBiggerThan10 == false) {
+                return
+            }
+            indexRef.current = indexRef.current - 10;
+
+            console.log(indexRef.current);
+            makeNewQuestionGrid('back');
+            console.log('inside getBack');
         }
     }
-    const makeNewQuestionGrid=(op)=>{
+    const makeNewQuestionGrid = (op) => {
         setQuestionListForGrid([])
         console.log("inside next questions");
-        
+
         let arr = []
         let titles = {
-            title: `Currently showing ${indexRef.current}-${indexRef.current+10} questions`,
-            buttons : ""
+            title: `Currently showing ${indexRef.current}-${indexRef.current + 10} questions`,
+            buttons: ""
         }
         arr.push(titles);
 
-        if(op =='next'){
+        if (op == 'next') {
 
-        var range = indexRef.current;
-       
-        //indexRef.current =range + 10;
-        for(var i =range;i<range+10;i++)
-        {
-            console.log(i);
-            if(qustionList[i] == null)
-            {
-                break;
+            var range = indexRef.current;
+
+            //indexRef.current =range + 10;
+            for (var i = range; i < range + 10; i++) {
+                console.log(i);
+                if (qustionList[i] == null) {
+                    break;
+                }
+                let e = qustionList[i];
+                let newQuestions = {
+                    adding: <button onClick={() => (addQuestionToList(e._id))}>Add</button>,
+                    questionNameAndTag: <QuestionNameAndTags Tags={e.questionTags} questionName={e.questionName} />,
+                }
+                arr.push(newQuestions);
             }
-            let e = qustionList[i];
-            let newQuestions = {
-                adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
-                questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-               }
-            arr.push(newQuestions);
+            console.log(indexRef.current);
+            setQuestionListForGrid(arr);
         }
-        console.log(indexRef.current);
-        setQuestionListForGrid(arr);
-        }
-        else{
-            
-        var range = indexRef.current;
-        console.log(range);
-        //indexRef.current =range - 10;
-        for(var i =range;i<range+10;i++)
-        {
-            console.log(i);
-            if(qustionList[i] == null)
-            {
-                break;
+        else {
+
+            var range = indexRef.current;
+            console.log(range);
+            //indexRef.current =range - 10;
+            for (var i = range; i < range + 10; i++) {
+                console.log(i);
+                if (qustionList[i] == null) {
+                    break;
+                }
+                let e = qustionList[i];
+                let newQuestions = {
+                    adding: <button onClick={() => (addQuestionToList(e._id))}>Add</button>,
+                    questionNameAndTag: <QuestionNameAndTags Tags={e.questionTags} questionName={e.questionName} />,
+                }
+                arr.push(newQuestions);
             }
-            let e = qustionList[i];
-            let newQuestions = {
-                adding: <button  onClick={()=>(addQuestionToList(e._id))}>Add</button> , 
-                questionNameAndTag: <QuestionNameAndTags  Tags={e.questionTags} questionName={e.questionName} />,
-               }
-            arr.push(newQuestions);
-        }
-        console.log(indexRef.current);
-        setQuestionListForGrid(arr);
-        
+            console.log(indexRef.current);
+            setQuestionListForGrid(arr);
+
         }
     }
 
-    const handleHeaderTextChanged=(text)=>{
+    const handleHeaderTextChanged = (text) => {
         setHeaderText(text.getCurrentContent().getPlainText());
-       
+
     }
-    const handleMssOnPassTextChanged=(text)=>{
+    const handleMssOnPassTextChanged = (text) => {
         setMsgOnPass(text.getCurrentContent().getPlainText());
     }
-    const handleMssOnFailTextChanged=(text)=>{
+    const handleMssOnFailTextChanged = (text) => {
         setMsgOnFail(text.getCurrentContent().getPlainText());
     }
-    
 
 
-    return(
+
+    return (
         <div>
 
             <h1>Edit/Make New Test</h1>
-            {flagToSelectedQuestions?<AllQuestions questionList = {qustionList}></AllQuestions>:<div></div>}
+            {flagToSelectedQuestions ? <AllQuestions questionList={qustionList}></AllQuestions> : <div></div>}
             {/* {false?<AllQuestions questionList = {loadedQuestionsNames}></AllQuestions>:<div></div>} */}
             <div className="generalTestDeatails">
 
-            <div className="fieldOfStudy">
-                    <label>field Of Study:{flagEmptyField?passedSubject:<Input value={inputFieldOfStudy} onChange={handlefieldOfStudy} />}</label>
-                    {}
-                    
+                <div className="fieldOfStudy">
+                    <label>field Of Study:{flagEmptyField ? passedSubject : <Input value={inputFieldOfStudy} onChange={handlefieldOfStudy} />}</label>
+                    { }
+
                     {/* <Input value={testName} onChange={handleTestName} /> */}
                 </div>
-               
+
                 <div className="field">
                     <label>Languege :</label>
                     <DropDownMenu items={quizLeng} handleClicked={changedLengu}></DropDownMenu>
@@ -472,7 +448,7 @@ const EditQuiz = (props) =>
 
                 <div className="testName">
                     <label>test Name :</label>
-                    {}
+                    { }
                     <Input value={testName} onChange={handleTestName} />
                     <label className="errorDisplay">{nameError}</label>
                 </div>
@@ -492,25 +468,25 @@ const EditQuiz = (props) =>
                     <label>Header:</label>
                     <label className="errorDisplay">{headerError}</label>
                     <Editor_w_Validator changeAnswer={handleHeaderTextChanged}
-                     default={isUpdate?`${headerText}`:`Header Text`} />
-                
+                        default={isUpdate ? `${headerText}` : `Header Text`} />
+
                 </div>
 
                 <div className="passsingTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
                     <label className="errorDisplay">{onPassError}</label>
                     <Editor_w_Validator changeAnswer={handleMssOnPassTextChanged}
-                     default={isUpdate?`${msgOnPass}`:`Messege on Passing the Test`} />
+                        default={isUpdate ? `${msgOnPass}` : `Messege on Passing the Test`} />
                 </div>
                 <div className="failTestMssTextEditor">
                     <label>Messege to Show on Passing:</label>
                     <label className="errorDisplay">{onFailError}</label>
                     <Editor_w_Validator changeAnswer={handleMssOnFailTextChanged}
-                    default={isUpdate?`${msgOnFail}`:'Messege on Failing the Test'} />
+                        default={isUpdate ? `${msgOnFail}` : 'Messege on Failing the Test'} />
                 </div>
 
-                
-                
+
+
 
             </div>
 
@@ -518,51 +494,51 @@ const EditQuiz = (props) =>
                 <div className="topLine">
                     <h3 >Questions</h3>
                 </div>
-                
+
                 <div className="upperQuestion">
                     <div>Note:this test is set to be "{inputTestType}"</div>
                     <ul>
                         <li>All the questions u select will be in the test</li>
                         <li>all repdents each respondent to recive </li>
-                        </ul>
-                        
+                    </ul>
+
                 </div>
                 <div className="selectQuestion">
                     <h4>select the questions that you want to includ in the test:</h4>
                     <div>
                         <label>Fillter by content</label> <input type="text"></input>
                     </div>
-                    
-                    <MenuGrid items ={questionListForGrid}></MenuGrid>
+
+                    <MenuGrid items={questionListForGrid}></MenuGrid>
                     <div className="buttonLine">
-                        Showing {totalNumOfQuestion} of {totalNumOfQuestion} 
-                        {arrayBiggerThan10?<Button text='Back' width='65px' height = '20px' action = {handelBackQuestions}></Button>:""}  
-                        <Button text='Next' width='65px' height = '20px' action = {handelNextQuestions}></Button>
-                        <Button text='Show Selected Only' width='200px' height = '20px' action = {handelShowOnlySelected}></Button>
-                        <Button text='Show All Questions' width='200px' height = '20px' action = {handelShowAllQuestions}></Button>
+                        Showing {totalNumOfQuestion} of {totalNumOfQuestion}
+                        {arrayBiggerThan10 ? <Button text='Back' width='65px' height='20px' action={handelBackQuestions}></Button> : ""}
+                        <Button text='Next' width='65px' height='20px' action={handelNextQuestions}></Button>
+                        <Button text='Show Selected Only' width='200px' height='20px' action={handelShowOnlySelected}></Button>
+                        <Button text='Show All Questions' width='200px' height='20px' action={handelShowAllQuestions}></Button>
                     </div>
                     <div>The test will includ {numberOfQAdded} questions in total </div>
                     <div className="inTestNames">questions that in the test - {loadedQuestionsNames}
-                    <label className="errorDisplay">{questionListError}</label>
+                        <label className="errorDisplay">{questionListError}</label>
                     </div>
                 </div>
 
             </div>
 
             <div className="actionButton">
-                <Link to={"/QuizMenu"} state={{subject: passedSubject }}>
-                    <Button text='Back' width='65px' height = '20px' />
+                <Link to={"/QuizMenu"} state={{ subject: passedSubject }}>
+                    <Button text='Back' width='65px' height='20px' />
                 </Link>
 
 
-                <Button text='Save' width='65px' height = '20px' action={saveQuiz}></Button>
+                <Button text='Save' width='65px' height='20px' action={saveQuiz}></Button>
             </div>
 
-            </div>
-            )
-    }
+        </div>
+    )
+}
 
-       
- 
- 
+
+
+
 export default EditQuiz;
