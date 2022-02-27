@@ -48,6 +48,7 @@ const EditQuestion = (props) => {
     const [questionId, setQuestionId] = useState();
     //Keep the default value for the question text
     const [defaultQuestion, setDefaultQuestion] = useState("");
+
     const location = useLocation();
 
 
