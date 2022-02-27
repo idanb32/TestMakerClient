@@ -77,7 +77,8 @@ const ClientTest = (props) => {
                 let stateObject = {
                     state: {
                         score: score.data,
-                        quiz: quiz
+                        quiz: quiz,
+                        userId:currentUser
                     }
                 }
                 nav("/FinishedTest", stateObject);

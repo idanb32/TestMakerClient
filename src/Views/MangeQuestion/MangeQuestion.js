@@ -78,9 +78,6 @@ const MangeQuestion = (props) => {
                 .catch((errorList) => {
                     console.log(errorList);
                 });
-        else {
-
-        }
     }
 
     const showAll = () => {
