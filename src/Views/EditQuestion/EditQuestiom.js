@@ -215,6 +215,7 @@ const EditQuestion = (props) => {
 
     const saveClicked = () => {
         if (valdiate()) {
+            console.log(isUpdate);
             let tagArr = tags.split(" ");
             let isHorizntoal = horizontalOption == "horizontal";
             let chosenQuestionType;
@@ -235,6 +236,8 @@ const EditQuestion = (props) => {
                     subject: subject
                 }
                 axios.post(port + "Update", question).then((result) => {
+                    window.alert(result.data);
+                    console.log(result);
                 })
                     .catch(error => console.log(error));
             }
@@ -249,6 +252,8 @@ const EditQuestion = (props) => {
                     subject: subject
                 }
                 axios.post(port + "Add", question).then((result) => {
+                    window.alert(result.data);
+                    console.log(result)
                 })
                     .catch(error2 => console.log(error2));
             }

@@ -20,6 +20,7 @@ const MangeQuiz = (props) => {
     const [selectedOption, setSelectedOption] = useState("Name");
     const [subjectOption,setSubjectOption] = useState(location.state.subject);
     const [firstRender,setFirstRender] = useState(true)
+    const [userName,setUsername] = useState(location.state.userName);
 
     const changeInput = (value) => {
         setInputText(value.target.value);
@@ -71,7 +72,7 @@ const MangeQuiz = (props) => {
                 numOfQuestion: numOfQuestion,
                 lastUpdate: quiz.date,
                 language: quiz.language,
-                buttons: <The3Buttons id={quiz._id}  deleteClicked={deleteClicked}/>
+                buttons: <The3Buttons id={quiz._id} userName={userName}  deleteClicked={deleteClicked}/>
             }
             newFormatedQuiz.push(newDisplayQuiz);
         });
@@ -117,7 +118,7 @@ const MangeQuiz = (props) => {
         </div>
         <MenuGrid items={formatedQuiz} />
         <div>
-            <Link to='/EditQuiz' state={{subject:`${subjectOption}`}} >
+            <Link to='/EditQuiz' state={{subject:`${subjectOption}` ,userId:userName}} >
             <Button text="Add new quiz" />
             </Link>
             

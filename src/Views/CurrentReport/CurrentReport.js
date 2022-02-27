@@ -14,16 +14,20 @@ const CurrentReport = () => {
     const nav = useNavigate();
     const { state } = useLocation();
     const [userName, setUserName] = useState();
-    const [quizQuestions, setQuiz] = useState([]);
+    const [quizQuestions, setQuiz] = useState();
     const [userAnswer, setUserAnswers] = useState([]);
     const [score, setScore] = useState();
     const [dateTaken, setDateTaken] = useState();
     const [testName, setTestName] = useState();
+    const [firstRender,setFirstRender] = useState(true);
 
     const renderQuestion = () => {
+        if(firstRender) return
         let tmp2 = [];
         let labels = { question: "Question name", answers: "User answers" };
+        console.log(quizQuestions);
         let tmp = quizQuestions.map((item) => {
+            console.log(item);
             let answers = getAnswerForQuestion(item.id);
             let returnME = {
                 question: <label>{item.questionName}: </label>,
@@ -52,12 +56,15 @@ const CurrentReport = () => {
         if (!state.state) return;
         let solvedQuiz = await axios.post(port + "get", { id: state.state.solvedId });
         let tmp = await axios.post(Quizport + "GetQuizQuestion", { id: state.state.quiz._id });
+        console.log(tmp.data);
+        console.log(solvedQuiz.data.userAnswer);
         setUserAnswers(solvedQuiz.data.userAnswer);
         setUserName(state.state.userName);
         setQuiz(tmp.data);
         setScore(solvedQuiz.data.score)
         setDateTaken(solvedQuiz.data.dateTaken);
         setTestName(state.state.testName)
+        setFirstRender(false);
     }, [])
 
     return (<div className="currentReport">
@@ -69,7 +76,7 @@ const CurrentReport = () => {
         </div>
         {renderQuestion()}
         <Link to="/TestReport" state={{ testName:testName }}>
-            <Button text="Move back" />
+            <button  > Move back</button>
         </Link>
     </div>)
 }

@@ -22,12 +22,13 @@ const port = "http://localhost:5000/question/";
 const EditQuiz = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [selectedOption, setSelectedOption] = useState("Name");
   const [inputSearchText, setInputSearchText] = useState("");
   const [searchBy, setSearchBy] = useState(["Name", "Language"]);
   const [passedSubject, setPassedSubject] = useState();
   const [qustionList, setQuestionList] = useState([]);
-  const [quizLeng, setQuizLen] = useState(["", "english", "hebrew"]);
+  const [quizLeng, setQuizLen] = useState(["english", "hebrew"]);
   const [testType, setTestType] = useState(["predefined", "ordinal"]);
   const [totalNumOfQuestion, setTotalNumOfQuestion] = useState(0);
   const [questionListForGrid, setQuestionListForGrid] = useState([]);
@@ -56,6 +57,7 @@ const EditQuiz = (props) => {
   const [testId, setTestId] = useState();
   const [subjectId, setSubjectId] = useState();
   const [modelOnLoad, setModelOnLoad] = useState({});
+  const [userId, setUserId] = useState(location.state.userId);
   //quiz model states
   const [numberOfQAdded, setNumberOfQAdded] = useState(0);
   const [inputPassGrade, setPassingGrade] = useState("");
@@ -64,7 +66,7 @@ const EditQuiz = (props) => {
   const [headerText, setHeaderText] = useState();
   const [msgOnPass, setMsgOnPass] = useState();
   const [msgOnFail, setMsgOnFail] = useState();
-  const [inputLangu, setInputLan] = useState();
+  const [inputLangu, setInputLan] = useState("english");
   const [inputFieldOfStudy, setInputFieldOfStudy] = useState();
   const [fieldOfStudyId, setFieldOfStudyId] = useState();
   const [inputTestType, setInputTestType] = useState("");
@@ -93,8 +95,10 @@ const EditQuiz = (props) => {
         setNumberOfQAdded(0);
       }
     } else {
-      if (location.state.subject == `undefined` && location.state.subject == "")
-        navigate(`/`);
+      if (location.state.subject == `undefined` || location.state.subject == "") {
+        window.alert('couldnt find subject redirecting you to main menu sorry :(')
+        navigate('/MainMenu', { state: { name: userId } });
+      }
       setInputFieldOfStudy(location.state.subject);
       let subjectId = await getSubjectByName(location.state.subject);
 
@@ -112,11 +116,14 @@ const EditQuiz = (props) => {
 
   const loadedQuestionsNamesHelper = async (qustionList) => {
     let arr = [];
+    let arr2 =[]
     for (const question of qustionList) {
       let res = await retriveSpecificQuestionService(question);
       arr.push(`${res.questionName},`);
+      arr2.push(res._id);
     }
     setLoadedQuestionsNames(arr);
+    setTestQuestionsAdded(arr2);
     return true;
   };
 
@@ -226,7 +233,7 @@ const EditQuiz = (props) => {
       if (isUpdate) {
         let quiz = {
           id: testId,
-          language: quizLeng,
+          language: inputLangu,
           testName: testName,
           passingGrade: inputPassGrade,
           msgOnPassSubject: headerText,
@@ -238,10 +245,11 @@ const EditQuiz = (props) => {
           subjectOfStudying: subjectId,
         };
         updateQuizService(quiz);
+        window.alert("Updated quiz!");
       } else {
         if (validtion()) {
           let quiz = {
-            language: "english",
+            language: inputLangu,
             testName: testName,
             passingGrade: inputPassGrade,
             msgOnPassSubject: msgOnPass,
@@ -253,6 +261,7 @@ const EditQuiz = (props) => {
             subjectOfStudying: fieldOfStudyId,
           };
           saveQuestionsService(quiz);
+          window.alert("quiz has been saved!");
         }
       }
     }
@@ -578,7 +587,7 @@ const EditQuiz = (props) => {
     </div>
 
     <div className="actionButton">
-      <Link to={"/QuizMenu"} state={{ subject: passedSubject }}>
+      <Link to={"/QuizMenu"} state={{ subject: passedSubject, userName: userId }}>
         <Button text="Back" width="65px" height="20px" />
       </Link>
 
