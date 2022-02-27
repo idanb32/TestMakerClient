@@ -30,10 +30,12 @@ const MangeQuiz = (props) => {
     }
 
     const handleSearch = async () => {
+        console.log(selectedOption+inputText);
         let searchRes = await axios.post(port + "search", {
             searchBy: selectedOption,
             searchText: inputText
         })
+        console.log(searchRes);
         formatModelClosed(searchRes.data);
     }
     const deleteClicked= (id)=>{

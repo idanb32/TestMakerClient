@@ -29,6 +29,7 @@ const MainMenu = (props) => {
       useEffect(async() => {
         let arr = await SubjectService();
         setSubjectList(arr);
+        setSelectedOption(arr[0])
           
 
 
